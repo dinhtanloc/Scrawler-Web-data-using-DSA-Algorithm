@@ -1,22 +1,22 @@
 package ueh.service;
 
-
 import ueh.model.HtmlData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.BlockingQueue;
+import ueh.util.Queue;
 
 @Service
 public class QueueService {
-    @Autowired
-    private BlockingQueue<HtmlData> htmlQueue;
+    private final Queue<HtmlData> htmlQueue;
 
-    public void enqueue(HtmlData htmlData) throws InterruptedException {
-        htmlQueue.put(htmlData);
+    public QueueService() {
+        this.htmlQueue = new Queue<>();
     }
 
-    public HtmlData dequeue() throws InterruptedException {
-        return htmlQueue.take();
+    public void enqueue(HtmlData htmlData) {
+        htmlQueue.enqueue(htmlData);
+    }
+
+    public HtmlData dequeue() {
+        return htmlQueue.dequeue();
     }
 }
