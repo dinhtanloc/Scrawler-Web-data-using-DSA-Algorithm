@@ -29,6 +29,9 @@ public class HtmlQueueController {
 
     @GetMapping("/process")
     public HtmlData processHtmlFromQueue() throws InterruptedException {
+        if (queueService.isEmpty()) {
+            throw new IllegalStateException("Queue is empty");
+        }
         HtmlData htmlData = queueService.dequeue();
         String filteredHtml = filterService.filterHtml(htmlData.getRawHtml());
         htmlData.setFilteredHtml(filteredHtml);
