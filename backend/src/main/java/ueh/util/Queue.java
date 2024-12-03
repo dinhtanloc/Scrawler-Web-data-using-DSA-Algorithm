@@ -15,7 +15,6 @@ public class Queue<T> {
         }
     }
 
-    // Constructor
     public Queue() {
         this.front = null;
         this.rear = null;
