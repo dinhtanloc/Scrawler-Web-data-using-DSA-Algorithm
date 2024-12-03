@@ -19,4 +19,10 @@ public class QueueService {
     public HtmlData dequeue() {
         return htmlQueue.dequeue();
     }
+
+    public void resetQueue() {
+        while (!htmlQueue.isEmpty()) {
+            htmlQueue.dequeue();
+        }
+    }
 }

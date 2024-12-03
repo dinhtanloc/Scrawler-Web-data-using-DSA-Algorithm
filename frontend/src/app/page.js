@@ -4,8 +4,11 @@ import { useState } from "react";
 import Tooltip from "@/components/Tooltip";
 import UploadHTML from "@/components/UploadHTML";
 import Spinner from "@/components/Spinner";
+import {getReq, postReq} from "@/utils/fetchData";
+import { FaSearch } from 'react-icons/fa';
 
 export default function Home() {
+  const [url, setUrl] = useState("");
   const [htmlContent, setHtmlContent] = useState("");
   const [parsedContent, setParsedContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,12 +34,31 @@ export default function Home() {
     }, 2000);
   };
 
-  const handleParseHtml = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setParsedContent("Hello\nThis is a label");
-      setLoading(false);
-    }, 2000);
+  const handleParseHtml = async () => {
+    setLoading(true); 
+  
+    try {
+      if (url || file) { 
+        const formData = new FormData();
+        
+        if (file) {
+          formData.append("file", file);
+        } else if (url) {
+          formData.append("htmlContent", url);
+        }
+        const response = await postReq("/api/html/read", formData);
+        setParsedContent(response);
+        console.log(response); 
+  
+      } else {
+        console.error("Error: No HTML content or file provided.");
+      }
+      
+    } catch (error) {
+      console.error("Error reading HTML:", error);
+    } finally {
+      setLoading(false); 
+    }
   };
 
   const handleSave = () => {
@@ -48,8 +70,34 @@ export default function Home() {
   };
 
   const handleUpload = (html) => {
-    setHtmlContent(html); // Gán nội dung HTML từ tệp vào state
+    setHtmlContent(html); 
   };
+
+  const handleCrawlHtml = async () => {
+    if (!url) {
+      alert("Please enter a URL.");
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      console.log("URL:", url);
+      // const response = await postReq("/api/html/crawl", { url });
+      // setHtmlContent(response.html);
+    } catch (error) {
+      console.error("Error fetching HTML:", error);
+      alert("Failed to fetch HTML.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleCrawlHtml(); // Thực hiện crawl khi nhấn Enter
+    }
+  };
+
   
 
   return (
@@ -81,15 +129,28 @@ export default function Home() {
 
       {/* Thanh nhập URL và nút tải tệp HTML */}
       <div className="flex justify-center items-center mb-6 space-x-4">
-        <input
-          type="text"
-          placeholder="Nhập URL trang web..."
-          className={`w-2/3 p-3 border rounded-md focus:outline-none ${
-            isDarkMode
-              ? "bg-black text-white border-gray-700"
-              : "bg-white text-black border-gray-300"
-          }`}
-        />
+        <div className="flex w-1/3">
+          <div className="relative w-full">
+            <input
+              type="text"
+              placeholder="Nhập URL trang web..."
+              className={`w-full p-3 pr-10 border rounded-md focus:outline-none ${
+                isDarkMode
+                  ? "bg-black text-white border-gray-700"
+                  : "bg-white text-black border-gray-300"
+              }`}
+              onKeyDown={handleKeyDown}
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            />
+            <button
+              onClick={handleCrawlHtml} 
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-lg"
+            >
+              <FaSearch /> 
+            </button>
+          </div>
+        </div>
         <span
           className={`text-lg ${
             isDarkMode ? "text-gray-400" : "text-gray-600"
