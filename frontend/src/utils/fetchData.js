@@ -1,6 +1,6 @@
 export const fetchData = async (url, options = {}) => {
   try {
-    const response = await fetch(url, {
+    const response = await fetch(`http://localhost:8080${url}`, {
       method: options.method || "GET", 
       headers: {
         "Content-Type": "application/json",
@@ -14,7 +14,13 @@ export const fetchData = async (url, options = {}) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json();
+    } catch (jsonError) {
+      // If response is not JSON, return the text or other content
+      data = await response.text();
+    }
     return data;
   } catch (error) {
     console.error("Request failed", error);

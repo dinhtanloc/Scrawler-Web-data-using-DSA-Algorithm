@@ -25,4 +25,8 @@ public class QueueService {
             htmlQueue.dequeue();
         }
     }
+
+    public boolean isEmpty() {
+        return htmlQueue.isEmpty();
+    }
 }
