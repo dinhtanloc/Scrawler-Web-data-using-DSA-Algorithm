@@ -4,13 +4,16 @@ public class HtmlData {
     private String rawHtml;
     private String filteredHtml;
 
-    // Constructor
     public HtmlData(String url, String rawHtml) {
         this.url = url;
         this.rawHtml = rawHtml;
     }
 
-    // Getters and Setters
+    public HtmlData(String rawHtml) {
+        this.rawHtml = rawHtml;
+        this.url = "default_url"; 
+    }
+
     public String getUrl() {
         return url;
     }
