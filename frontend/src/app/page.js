@@ -82,8 +82,9 @@ export default function Home() {
     setLoading(true);
     try {
       console.log("URL:", url);
-      // const response = await postReq("/api/html/crawl", { url });
-      // setHtmlContent(response.html);
+      const response = await postReq("/api/html/crawl", { url });
+      setHtmlContent(response.html);
+      console.log(response.html);
     } catch (error) {
       console.error("Error fetching HTML:", error);
       alert("Failed to fetch HTML.");
