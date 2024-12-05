@@ -35,29 +35,27 @@ export default function Home() {
   };
 
   const handleParseHtml = async () => {
-    setLoading(true); 
+    setLoading(true);
   
     try {
-      if (url || file) { 
+      // Kiểm tra nếu có nội dung HTML trong htmlContent
+      if (htmlContent) {
         const formData = new FormData();
-        
-        if (file) {
-          formData.append("file", file);
-        } else if (url) {
-          formData.append("htmlContent", url);
-        }
-        const response = await postReq("/api/html/read", formData);
+        formData.append("htmlContent", htmlContent);  
+  
+        const response = await postReq("/api/html/read", { "htmlContent": htmlContent });
         setParsedContent(response);
-        console.log(response); 
+        console.log(response);
   
       } else {
-        console.error("Error: No HTML content or file provided.");
+        console.error("Error: No HTML content provided.");
+        alert("Vui lòng nhập nội dung HTML.");
       }
-      
+  
     } catch (error) {
       console.error("Error reading HTML:", error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -82,7 +80,8 @@ export default function Home() {
     setLoading(true);
     try {
       console.log("URL:", url);
-      const response = await postReq("/api/html/crawl", { url });
+      const response = await postReq("/api/html/crawl", { "url": url });
+      console.log(response);
       setHtmlContent(response.html);
       console.log(response.html);
     } catch (error) {
@@ -95,7 +94,7 @@ export default function Home() {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleCrawlHtml(); // Thực hiện crawl khi nhấn Enter
+      handleCrawlHtml(); 
     }
   };
 
@@ -264,7 +263,7 @@ export default function Home() {
           </h2>
           <div className="overflow-auto h-[500px] border border-gray-700 p-4 rounded-md">
             <p className={`${isDarkMode ? "text-white" : "text-black"}`}>
-              {parsedContent}
+              {renderContent(parsedContent)}
             </p>
           </div>
         </div>
@@ -272,3 +271,18 @@ export default function Home() {
     </div>
   );
 }
+
+
+
+const renderContent = (content) => {
+  return (
+    <div>
+      {content.p && <p>{content.p}</p>}
+      {content.div && <div>{content.div}</div>}
+      {content.h2 && <h2>{content.h2}</h2>}
+      {content.h3 && <h3>{content.h3}</h3>}
+      {content.title && <title>{content.title}</title>}
+      {content.span && <span>{content.span}</span>}
+    </div>
+  );
+};
