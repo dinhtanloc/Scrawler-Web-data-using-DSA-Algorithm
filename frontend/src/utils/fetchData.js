@@ -4,22 +4,23 @@ export const fetchData = async (url, options = {}) => {
       method: options.method || "GET", 
       headers: {
         "Content-Type": "application/json",
-        ...options.headers, 
+        // ...options.headers, 
       },
       body: options.body ? JSON.stringify(options.body) : null, 
-      ...options,
+      // ...options,
     });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    let data;
-    try {
-      data = await response.json();
-    } catch (jsonError) {
-      // If response is not JSON, return the text or other content
-      data = await response.text();
+    const contentType = response.headers.get("Content-Type") || "";
+
+    // Chỉ đọc stream một lần, dựa trên Content-Type
+    if (contentType.includes("application/json")) {
+      return await response.json();
+    } else {
+      return await response.text();
     }
     return data;
   } catch (error) {
