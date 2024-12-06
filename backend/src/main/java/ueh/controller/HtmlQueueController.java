@@ -39,11 +39,10 @@ public class HtmlQueueController {
         System.out.println("Crawling URL: " + url);
 
         try {
-            HtmlData htmlData = crawlerService.crawl(url); // Gọi service để lấy HTML
+            HtmlData htmlData = crawlerService.crawl(url);
             String rawHtml = htmlData.getRawHtml();
             System.out.println("HTML Content: " + rawHtml);
 
-            // Trả về HTML dưới dạng JSON
             Map<String, Object> response = Map.of(
                 "html", rawHtml,
                 "status", 200,
@@ -53,7 +52,6 @@ public class HtmlQueueController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            // Xử lý lỗi và trả về phản hồi lỗi
             Map<String, Object> errorResponse = Map.of(
                 "error", "Failed to crawl URL",
                 "details", e.getMessage(),
@@ -71,16 +69,6 @@ public class HtmlQueueController {
      * @return Nội dung đã xử lý
      * @throws IOException
      */
-    // @PostMapping("/read")
-    // public String readHtml(@RequestBody Map<String, String> body) throws IOException {
-    //     String htmlContent = body.get("htmlContent");
-    //     if (htmlContent == null || htmlContent.isEmpty()) {
-    //         throw new IllegalArgumentException("Missing input: 'htmlContent' must be provided");
-    //     }
-
-    //     filterService.classifyAndEnqueueContent(htmlContent);
-    //     return filterService.processQueue();
-    // }
 
     @PostMapping(value="/read", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> readHtml(@RequestBody Map<String, String> body) {
