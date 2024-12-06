@@ -60,25 +60,4 @@ public class Queue<T> {
         return size;
     }
 
-    public static void main(String[] args) {
-        Queue<Integer> queue = new Queue<>();
-
-        // Thêm các phần tử vào Queue
-        queue.enqueue(1);
-        queue.enqueue(2);
-        queue.enqueue(3);
-
-        // Kiểm tra kích thước Queue
-        System.out.println("Queue size: " + queue.size()); // 3
-
-        // Xem phần tử đầu tiên
-        System.out.println("Front element: " + queue.peek()); // 1
-
-        // Lấy phần tử ra
-        System.out.println("Dequeued: " + queue.dequeue()); // 1
-        System.out.println("Queue size after dequeue: " + queue.size()); // 2
-
-        // Xem phần tử đầu tiên sau khi dequeue
-        System.out.println("Front element: " + queue.peek()); // 2
-    }
 }
