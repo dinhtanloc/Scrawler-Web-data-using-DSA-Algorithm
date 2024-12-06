@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import Tooltip from "@/components/Tooltip";
 import UploadHTML from "@/components/UploadHTML";
@@ -21,6 +21,28 @@ export default function Home() {
     setIsDarkMode(!isDarkMode);
     document.documentElement.classList.toggle("dark");
   };
+
+  // Lấy dữ liệu từ localStorage khi trang tải lần đầu
+  useEffect(() => {
+    const savedUrl = localStorage.getItem("url");
+    const savedHtmlContent = localStorage.getItem("htmlContent");
+    const savedParsedContent = localStorage.getItem("parsedContent");
+
+    if (savedUrl) setUrl(savedUrl);
+    if (savedHtmlContent) setHtmlContent(savedHtmlContent);
+    if (savedParsedContent) setParsedContent(JSON.parse(savedParsedContent));
+  }, []);
+
+  // Lưu trạng thái vào localStorage mỗi khi nó thay đổi
+  useEffect(() => {
+    localStorage.setItem("url", url);
+    localStorage.setItem("htmlContent", htmlContent);
+    if (parsedContent) {
+      localStorage.setItem("parsedContent", JSON.stringify(parsedContent));
+    } else {
+      localStorage.removeItem("parsedContent"); // Xóa nếu không có nội dung
+    }
+  }, [url, htmlContent, parsedContent]);
 
 
   const handleViewHtml = () => {
@@ -279,14 +301,13 @@ export default function Home() {
 
 
 const renderContent = (content) => {
+  if (!content) return null; // Nếu không có nội dung, không hiển thị gì
+
   return (
     <div>
       {content.p && <p>{content.p}</p>}
-      {content.div && <div>{content.div}</div>}
-      {content.h2 && <h2>{content.h2}</h2>}
-      {content.h3 && <h3>{content.h3}</h3>}
-      {content.title && <title>{content.title}</title>}
       {content.span && <span>{content.span}</span>}
+      {/* Thêm các điều kiện khác nếu cần */}
     </div>
   );
 };
