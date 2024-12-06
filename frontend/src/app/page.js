@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter
 import Tooltip from "@/components/Tooltip";
 import UploadHTML from "@/components/UploadHTML";
 import Spinner from "@/components/Spinner";
@@ -14,10 +15,13 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  const router = useRouter(); // Khởi tạo router
+
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.classList.toggle("dark");
   };
+
 
   const handleViewHtml = () => {
     setLoading(true);
@@ -64,7 +68,7 @@ export default function Home() {
   };
 
   const handleChatBot = () => {
-    alert("Chuyển đến Chat Bot!");
+    router.push("/chatbot"); // Điều hướng sang trang /chatbot
   };
 
   const handleUpload = (html) => {
