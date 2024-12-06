@@ -109,7 +109,7 @@ export default function Home() {
       {/* Dark Mode Toggle */}
       <button
         onClick={toggleDarkMode}
-        className={`fixed top-4 right-4 px-4 py-2 rounded-md ${
+        className={`px-4 py-2 rounded-md ${
           isDarkMode
             ? "bg-white text-black border border-gray-700"
             : "bg-black text-white"
