@@ -262,9 +262,9 @@ export default function Home() {
             Nội dung đã đọc
           </h2>
           <div className="overflow-auto h-[500px] border border-gray-700 p-4 rounded-md">
-            <p className={`${isDarkMode ? "text-white" : "text-black"}`}>
+            <div className={`${isDarkMode ? "text-white" : "text-black"}`}>
               {renderContent(parsedContent)}
-            </p>
+            </div>
           </div>
         </div>
       </div>
