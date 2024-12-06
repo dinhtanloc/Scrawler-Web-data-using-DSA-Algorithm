@@ -1,26 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 import Tooltip from "@/components/Tooltip";
 import UploadHTML from "@/components/UploadHTML";
 import Spinner from "@/components/Spinner";
-import {getReq, postReq} from "@/utils/fetchData";
-import { FaSearch } from 'react-icons/fa';
+import { postReq } from "@/utils/fetchData";
+import { FaSearch } from "react-icons/fa";
+import "@/styles/renderContent.css";
+
 
 export default function Home() {
   const [url, setUrl] = useState("");
   const [htmlContent, setHtmlContent] = useState("");
-  const [parsedContent, setParsedContent] = useState("");
+  const [parsedContent, setParsedContent] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const router = useRouter(); // Khởi tạo router
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle("dark");
-  };
+  const router = useRouter();
 
   // Lấy dữ liệu từ localStorage khi trang tải lần đầu
   useEffect(() => {
@@ -33,17 +30,21 @@ export default function Home() {
     if (savedParsedContent) setParsedContent(JSON.parse(savedParsedContent));
   }, []);
 
-  // Lưu trạng thái vào localStorage mỗi khi nó thay đổi
+  // Lưu trạng thái vào localStorage mỗi khi trạng thái thay đổi
   useEffect(() => {
     localStorage.setItem("url", url);
     localStorage.setItem("htmlContent", htmlContent);
     if (parsedContent) {
       localStorage.setItem("parsedContent", JSON.stringify(parsedContent));
     } else {
-      localStorage.removeItem("parsedContent"); // Xóa nếu không có nội dung
+      localStorage.removeItem("parsedContent");
     }
   }, [url, htmlContent, parsedContent]);
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle("dark");
+  };
 
   const handleViewHtml = () => {
     setLoading(true);
@@ -62,24 +63,16 @@ export default function Home() {
 
   const handleParseHtml = async () => {
     setLoading(true);
-  
     try {
-      // Kiểm tra nếu có nội dung HTML trong htmlContent
       if (htmlContent) {
-        const formData = new FormData();
-        formData.append("htmlContent", htmlContent);  
-  
-        const response = await postReq("/api/html/read", { "htmlContent": htmlContent });
-        setParsedContent(response);
-        console.log(response);
-  
+        const response = await postReq("/api/html/read", { htmlContent });
+        setParsedContent(response); // Ghi đè nội dung cũ
       } else {
-        console.error("Error: No HTML content provided.");
         alert("Vui lòng nhập nội dung HTML.");
       }
-  
     } catch (error) {
-      console.error("Error reading HTML:", error);
+      console.error("Error parsing HTML:", error);
+      alert("Không thể đọc nội dung HTML.");
     } finally {
       setLoading(false);
     }
@@ -90,40 +83,68 @@ export default function Home() {
   };
 
   const handleChatBot = () => {
-    router.push("/chatbot"); // Điều hướng sang trang /chatbot
+    router.push("/chatbot");
   };
 
   const handleUpload = (html) => {
-    setHtmlContent(html); 
+    setHtmlContent(html);
   };
 
   const handleCrawlHtml = async () => {
     if (!url) {
-      alert("Please enter a URL.");
+      alert("Vui lòng nhập URL.");
       return;
     }
-    
+
     setLoading(true);
     try {
-      console.log("URL:", url);
-      const response = await postReq("/api/html/crawl", { "url": url });
-      console.log(response);
-      setHtmlContent(response.html);
-      console.log(response.html);
+      const response = await postReq("/api/html/crawl", { url });
+      setHtmlContent(response.html); // Ghi đè nội dung cũ
     } catch (error) {
       console.error("Error fetching HTML:", error);
-      alert("Failed to fetch HTML.");
+      alert("Không thể lấy nội dung HTML.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleCrawlHtml(); 
+    if (e.key === "Enter") {
+      handleCrawlHtml();
     }
   };
 
+  const renderContent = (content) => {
+    if (!content) return null;
+  
+    return (
+      <div className="space-y-4">
+        {content.title && (
+          <div className="text-lg font-bold text-center text-blue-600 border-b-2 pb-2">
+            {content.title}
+          </div>
+        )}
+        {content.h1 && (
+          <h1 className="text-2xl font-bold border-b-2 pb-2">{content.h1}</h1>
+        )}
+        {content.h2 && (
+          <h2 className="text-xl font-semibold border-l-4 pl-2 border-blue-500">
+            {content.h2}
+          </h2>
+        )}
+        {content.h3 && (
+          <h3 className="text-lg font-medium pl-4 text-gray-700">{content.h3}</h3>
+        )}
+        {content.p && (
+          <p className="text-base leading-relaxed text-justify pl-6">{content.p}</p>
+        )}
+        {content.span && (
+          <span className="text-sm italic pl-8 text-gray-600">{content.span}</span>
+        )}
+      </div>
+    );
+  };
+  
   
 
   return (
@@ -170,10 +191,10 @@ export default function Home() {
               onChange={(e) => setUrl(e.target.value)}
             />
             <button
-              onClick={handleCrawlHtml} 
+              onClick={handleCrawlHtml}
               className="absolute top-1/2 right-3 transform -translate-y-1/2 text-lg"
             >
-              <FaSearch /> 
+              <FaSearch />
             </button>
           </div>
         </div>
@@ -202,7 +223,6 @@ export default function Home() {
               : "bg-gray-100 border border-gray-300"
           }`}
         >
-          {/* Nút HTML */}
           <div className="mb-4">
             <Tooltip text="Hiển thị nội dung HTML">
               <button
@@ -217,7 +237,6 @@ export default function Home() {
               </button>
             </Tooltip>
           </div>
-
           <h2
             className={`text-xl font-semibold mb-4 ${
               isDarkMode ? "text-red-500" : "text-red-700"
@@ -240,7 +259,6 @@ export default function Home() {
               : "bg-gray-100 border border-gray-300"
           }`}
         >
-          {/* Ba nút Đọc, Save, Chat Bot */}
           <div className="flex space-x-4 mb-4">
             <Tooltip text="Chuyển đổi HTML sang nội dung dễ đọc">
               <button
@@ -279,7 +297,6 @@ export default function Home() {
               </button>
             </Tooltip>
           </div>
-
           <h2
             className={`text-xl font-semibold mb-4 ${
               isDarkMode ? "text-red-500" : "text-red-700"
@@ -288,26 +305,10 @@ export default function Home() {
             Nội dung đã đọc
           </h2>
           <div className="overflow-auto h-[500px] border border-gray-700 p-4 rounded-md">
-            <p className={`${isDarkMode ? "text-white" : "text-black"}`}>
-              {renderContent(parsedContent)}
-            </p>
+            {renderContent(parsedContent)}
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-
-
-const renderContent = (content) => {
-  if (!content) return null; // Nếu không có nội dung, không hiển thị gì
-
-  return (
-    <div>
-      {content.p && <p>{content.p}</p>}
-      {content.span && <span>{content.span}</span>}
-      {/* Thêm các điều kiện khác nếu cần */}
-    </div>
-  );
-};
