@@ -11,5 +11,4 @@ public class Chunk {
     private String text;  // Nội dung văn bản của chunk
     private double[] embedding;  // Vector embedding của văn bản
 
-    // Getters và Setters
 }
