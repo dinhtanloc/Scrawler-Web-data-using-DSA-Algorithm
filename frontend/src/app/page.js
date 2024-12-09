@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Tooltip from "@/components/Tooltip";
 import UploadHTML from "@/components/UploadHTML";
 import Spinner from "@/components/Spinner";
@@ -263,7 +263,7 @@ export default function Home() {
           </h2>
           <div className="overflow-auto h-[500px] border border-gray-700 p-4 rounded-md">
             <div className={`${isDarkMode ? "text-white" : "text-black"}`}>
-              {renderContent(parsedContent)}
+            {parsedContent && renderParsedContent(parsedContent)}
             </div>
           </div>
         </div>
@@ -275,14 +275,103 @@ export default function Home() {
 
 
 const renderContent = (content) => {
+  if (typeof content !== 'object' || content === null) return null;
+
+  const renderNode = (node, keyPrefix = '') => {
+    if (Array.isArray(node)) {
+      return node.map((item, index) => renderNode(item, `${keyPrefix}-${index}`));
+    } else if (typeof node === 'object') {
+      return Object.entries(node).map(([key, value], index) =>
+        <div key={`${keyPrefix}-${key}-${index}`} className="my-2">
+          <strong>{key}:</strong> {renderNode(value, `${keyPrefix}-${key}`)}
+        </div>
+      );
+    } else {
+      return <span>{node}</span>;
+    }
+  };
+
+  return <div>{renderNode(content)}</div>;
+};
+
+
+const renderWithTags = (content) => {
+  if (typeof content !== 'object' || content === null) return null;
+
+  const renderElement = (tag, data, key) => {
+    if (!data) return null;
+    return Array.isArray(data)
+      ? data.map((item, i) => React.createElement(tag, { key: `${key}-${i}` }, item))
+      : React.createElement(tag, { key }, data);
+  };
+
   return (
     <div>
-      {content.p && <p>{content.p}</p>}
-      {content.div && <div>{content.div}</div>}
-      {content.h2 && <h2>{content.h2}</h2>}
-      {content.h3 && <h3>{content.h3}</h3>}
-      {content.title && <title>{content.title}</title>}
-      {content.span && <span>{content.span}</span>}
+      {['p', 'h2', 'h3', 'div', 'span'].map((tag) =>
+        content[tag] && renderElement(tag, content[tag], tag)
+      )}
+      {content.title && <h1>{content.title}</h1>}
+    </div>
+  );
+};
+
+
+
+const renderContentFlat = (content) => {
+  if (typeof content !== 'object' || content === null) return null;
+
+  return (
+    <div>
+      {Object.entries(content).map(([key, value], index) => {
+        if (Array.isArray(value)) {
+          // Nếu giá trị là mảng, hiển thị danh sách
+          return (
+            <div key={index} className="my-2">
+              <strong>{key}:</strong>
+              <ul className="list-disc list-inside">
+                {value.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        } else if (typeof value === 'string' || typeof value === 'number') {
+          // Nếu giá trị là chuỗi hoặc số, hiển thị trực tiếp
+          return (
+            <div key={index} className="my-2">
+              <strong>{key}:</strong> <span>{value}</span>
+            </div>
+          );
+        } else {
+          // Nếu giá trị là object lồng nhau, chỉ hiển thị lớp đầu tiên
+          return (
+            <div key={index} className="my-2">
+              <strong>{key}:</strong> <em>[Object]</em>
+            </div>
+          );
+        }
+      })}
+    </div>
+  );
+};
+
+const renderParsedContent = (content) => {
+  if (typeof content !== 'object' || !content) return null;
+
+  return (
+    <div>
+      {Object.entries(content).map(([tag, values], idx) => {
+        if (Array.isArray(values)) {
+          // Tạo phần tử cho mỗi giá trị trong mảng
+          return values.map((value, index) =>
+            React.createElement(tag, { key: `${tag}-${idx}-${index}` }, value)
+          );
+        } else if (typeof values === "string") {
+          // Giá trị đơn
+          return React.createElement(tag, { key: `${tag}-${idx}` }, values);
+        }
+        return null;
+      })}
     </div>
   );
 };
