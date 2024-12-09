@@ -1,7 +1,11 @@
-ueh\App.class
+ueh\service\ChatBotService.class
+ueh\service\DataRetrievalService.class
 ueh\service\HtmlFilterService.class
+ueh\config\AdvisorConfiguration.class
 ueh\service\QueueService.class
-ueh\config\QueueConfig.class
+ueh\util\Queue.class
+ueh\util\Queue$Node.class
 ueh\service\HtmlCrawlerService.class
+DotenvConfig.class
 ueh\controller\HtmlQueueController.class
 ueh\model\HtmlData.class

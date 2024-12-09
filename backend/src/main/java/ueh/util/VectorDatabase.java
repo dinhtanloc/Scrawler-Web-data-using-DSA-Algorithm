@@ -1,4 +1,4 @@
-package com.example.springbootmongodb.util;
+package ueh.util;
 
 import org.springframework.stereotype.Component;
 

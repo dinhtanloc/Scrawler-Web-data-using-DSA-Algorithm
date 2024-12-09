@@ -1,6 +1,6 @@
-package com.example.springbootmongodb.service;
+package ueh.service;
 
-import com.example.springbootmongodb.repository.ChunkRepository;
+import ueh.repository.ChunkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ai.document.Document;
@@ -28,18 +28,15 @@ public class ChunkService {
      * @param htmlContent Nội dung HTML cần xử lý.
      */
     public void embededHTML(String htmlContent) {
-        // Bước 1: Tạo Document từ nội dung HTML
         Document document = new Document(htmlContent);
 
-        // Bước 2: Tách Document thành các chunk
         TokenTextSplitter splitter = new TokenTextSplitter();
         List<Document> chunks = splitter.apply(List.of(document));
 
-        // Bước 3: Lưu các chunk xuống MongoDB
         for (Document chunk : chunks) {
             Chunk chunkEntity = new Chunk();
-            chunkEntity.setText(chunk.getContent()); // Lấy nội dung từ chunk
-            chunkEntity.setEmbedding(chunk.getEmbedding()); // Nếu đã tính embedding
+            chunkEntity.setText(chunk.getContent()); 
+            chunkEntity.setEmbedding(chunk.getEmbedding()); 
             saveChunk(chunkEntity);
         }
     }

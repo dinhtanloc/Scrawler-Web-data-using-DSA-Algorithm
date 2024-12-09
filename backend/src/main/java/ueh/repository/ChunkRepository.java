@@ -1,6 +1,6 @@
-package com.example.springbootmongodb.repository;
+package ueh.repository;
 
-import com.example.springbootmongodb.model.Chunk;
+import ueh.model.Chunk;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ChunkRepository extends MongoRepository<Chunk, String> {
