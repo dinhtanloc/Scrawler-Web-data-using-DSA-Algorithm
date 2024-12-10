@@ -16,7 +16,8 @@ import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 
-@CrossOrigin(origins = "http://localhost:3000")
+// @CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/html")
 public class HtmlQueueController {

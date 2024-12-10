@@ -18,7 +18,7 @@ public class EmbeddingModelConfig {
 
     private String model;
 
-    @Bean
+    @Bean(name = "customEmbeddingModel")
     public EmbeddingModel embeddingModel() {
         if (apiKey == null || apiKey.isEmpty()) {
             throw new IllegalStateException("API key is not set in the environment variables.");
