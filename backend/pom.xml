@@ -12,6 +12,47 @@
   <version>1.0-SNAPSHOT</version>
   <name>DSA-Finalproject</name>
   <url>http://maven.apache.org</url>
+
+  <repositories>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>spring-snapshots</id>
+      <name>Spring Snapshots</name>
+      <url>https://repo.spring.io/snapshot</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
+
+  <dependencyManagement>
+      <dependencies>
+          <dependency>
+              <groupId>org.springframework.ai</groupId>
+              <artifactId>spring-ai</artifactId>
+              <version>1.0.0-SNAPSHOT</version>
+              <type>pom</type>
+              <scope>import</scope>
+          </dependency>
+          <dependency>
+              <groupId>org.springframework.ai</groupId>
+              <artifactId>spring-ai-core</artifactId>
+              <version>1.0.0-SNAPSHOT</version>
+              <type>pom</type>
+              <scope>import</scope>
+          </dependency>
+      </dependencies>
+  </dependencyManagement>
+
+
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -36,7 +77,32 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-data-mongodb</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>io.github.cdimascio</groupId>
+      <artifactId>dotenv-java</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
+        <version>LATEST</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-transformers-spring-boot-starter</artifactId>
+        <version>LATEST</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-pdf-document-reader</artifactId>
+        <version>LATEST</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-mongodb-atlas-store-spring-boot-starter</artifactId>
+        <version>LATEST</version>
+    </dependency>
+  
   </dependencies>
   <build>
     <plugins>
