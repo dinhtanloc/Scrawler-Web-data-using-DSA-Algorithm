@@ -13,5 +13,8 @@ ref
 .env.local
 
 target/
-
+target/classes/
 *.jar
+backend/target/DSA-Finalproject-1.0-SNAPSHOT.jar
+*.properties
+application.properties
