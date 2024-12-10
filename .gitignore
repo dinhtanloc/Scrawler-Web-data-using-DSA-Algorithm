@@ -18,3 +18,4 @@ target/classes/
 backend/target/DSA-Finalproject-1.0-SNAPSHOT.jar
 *.properties
 application.properties
+resources/application.properties
