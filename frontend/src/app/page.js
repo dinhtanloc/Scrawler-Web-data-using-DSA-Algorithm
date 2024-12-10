@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Tooltip from "@/components/Tooltip";
 import UploadHTML from "@/components/UploadHTML";
 import Spinner from "@/components/Spinner";
+import RenderContent from "@/components/RenderContent"; 
 import { postReq } from "@/utils/fetchData";
 import { FaSearch } from "react-icons/fa";
 import "@/styles/renderContent.css";
@@ -113,38 +114,6 @@ export default function Home() {
       handleCrawlHtml();
     }
   };
-
-  const renderContent = (content) => {
-    if (!content) return null;
-  
-    return (
-      <div className="space-y-4">
-        {content.title && (
-          <div className="text-lg font-bold text-center text-blue-600 border-b-2 pb-2">
-            {content.title}
-          </div>
-        )}
-        {content.h1 && (
-          <h1 className="text-2xl font-bold border-b-2 pb-2">{content.h1}</h1>
-        )}
-        {content.h2 && (
-          <h2 className="text-xl font-semibold border-l-4 pl-2 border-blue-500">
-            {content.h2}
-          </h2>
-        )}
-        {content.h3 && (
-          <h3 className="text-lg font-medium pl-4 text-gray-700">{content.h3}</h3>
-        )}
-        {content.p && (
-          <p className="text-base leading-relaxed text-justify pl-6">{content.p}</p>
-        )}
-        {content.span && (
-          <span className="text-sm italic pl-8 text-gray-600">{content.span}</span>
-        )}
-      </div>
-    );
-  };
-  
   
 
   return (
@@ -305,7 +274,7 @@ export default function Home() {
             Nội dung đã đọc
           </h2>
           <div className="overflow-auto h-[500px] border border-gray-700 p-4 rounded-md">
-            {renderContent(parsedContent)}
+            <RenderContent content={parsedContent} />
           </div>
         </div>
       </div>
