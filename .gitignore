@@ -11,3 +11,7 @@ ref
 
 .env
 .env.local
+
+target/
+
+*.jar
