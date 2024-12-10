@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\dto\ChunkDocument.java
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\model\HtmlData.java
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\service\HtmlFilterService.java
@@ -8,3 +9,26 @@ C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\config\QueueConfi
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\App.java
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\service\QueueService.java
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\controller\WikiDocumentsController.java
+=======
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\controller\HtmlQueueController.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\HtmlCrawlerService.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\HtmlFilterService.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\EmbeddingModelConfig.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\model\HtmlData.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\controller\ChatbotController.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\QueueConfig.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\controller\TextController.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\repository\ChunkRepository.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\DotenvConfig.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\dto\ChatRequest.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\ChatBotService.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\DataRetrievalService.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\VectorStoreConfig.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\App.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\QueueService.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\model\Chunk.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\util\Queue.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\util\VectorDatabase.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\AdvisorConfiguration.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\ChunkService.java
+>>>>>>> 81fa0ef6d8d0dd1dd09ce7e07bae31cbe67675e3

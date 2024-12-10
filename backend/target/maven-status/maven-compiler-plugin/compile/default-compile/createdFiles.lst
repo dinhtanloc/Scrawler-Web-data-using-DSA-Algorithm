@@ -1,7 +1,30 @@
 ueh\App.class
+<<<<<<< HEAD
 ueh\service\HtmlFilterService.class
 ueh\service\QueueService.class
 ueh\config\QueueConfig.class
 ueh\service\HtmlCrawlerService.class
 ueh\controller\HtmlQueueController.class
 ueh\model\HtmlData.class
+=======
+ueh\service\DataRetrievalService.class
+ueh\controller\ChatbotController.class
+ueh\service\HtmlFilterService.class
+ueh\model\Chunk.class
+ueh\config\AdvisorConfiguration.class
+ueh\service\QueueService.class
+ueh\config\QueueConfig.class
+ueh\util\VectorDatabase.class
+ueh\repository\ChunkRepository.class
+DotenvConfig.class
+ueh\controller\TextController.class
+ueh\controller\HtmlQueueController.class
+ueh\model\HtmlData.class
+ueh\service\ChatBotService.class
+ueh\config\VectorStoreConfig.class
+ueh\util\Queue.class
+ueh\config\EmbeddingModelConfig.class
+ueh\service\ChunkService.class
+ueh\util\Queue$Node.class
+ueh\service\HtmlCrawlerService.class
+>>>>>>> 81fa0ef6d8d0dd1dd09ce7e07bae31cbe67675e3
