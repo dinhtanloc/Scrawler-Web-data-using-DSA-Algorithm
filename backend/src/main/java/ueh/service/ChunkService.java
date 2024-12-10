@@ -35,8 +35,13 @@ public class ChunkService {
 
         for (Document chunk : chunks) {
             Chunk chunkEntity = new Chunk();
-            chunkEntity.setText(chunk.getContent()); 
-            chunkEntity.setEmbedding(chunk.getEmbedding()); 
+            chunkEntity.setText(chunk.getContent());
+            float[] floatEmbedding = chunk.getEmbedding();
+            double[] doubleEmbedding = new double[floatEmbedding.length];
+            for (int i = 0; i < floatEmbedding.length; i++) {
+                doubleEmbedding[i] = (double) floatEmbedding[i];
+            }
+            chunkEntity.setEmbedding(doubleEmbedding);
             saveChunk(chunkEntity);
         }
     }

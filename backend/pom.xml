@@ -85,21 +85,22 @@
     <dependency>
         <groupId>org.springframework.ai</groupId>
         <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
-        <version>1.0.0-M1</version>
+        <version>LATEST</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.ai</groupId>
         <artifactId>spring-ai-transformers-spring-boot-starter</artifactId>
-        <version>1.0.0-M1</version>
+        <version>LATEST</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.ai</groupId>
         <artifactId>spring-ai-pdf-document-reader</artifactId>
-        <version>1.0.0-M1</version>
+        <version>LATEST</version>
     </dependency>
     <dependency>
         <groupId>org.springframework.ai</groupId>
         <artifactId>spring-ai-mongodb-atlas-store-spring-boot-starter</artifactId>
+        <version>LATEST</version>
     </dependency>
   
   </dependencies>
