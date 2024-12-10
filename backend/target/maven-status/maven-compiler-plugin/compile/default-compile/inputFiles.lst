@@ -1,6 +1,7 @@
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\controller\HtmlQueueController.java
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\HtmlCrawlerService.java
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\HtmlFilterService.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\EmbeddingModelConfig.java
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\model\HtmlData.java
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\controller\ChatbotController.java
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\QueueConfig.java

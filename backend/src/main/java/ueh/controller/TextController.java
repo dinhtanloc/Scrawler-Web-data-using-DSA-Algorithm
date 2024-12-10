@@ -30,7 +30,7 @@ public class TextController {
     @PostMapping("/save")
     public String saveHtml(@RequestBody String htmlContent) {
         try {
-            chunkService.processHtml(htmlContent);
+            chunkService.embededHTML(htmlContent);
             return "HTML content processed and saved as chunks.";
         } catch (Exception e) {
             return "Error processing HTML content: " + e.getMessage();
