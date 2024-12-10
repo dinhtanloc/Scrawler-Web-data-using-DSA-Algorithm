@@ -13,7 +13,7 @@ ref
 .env.local
 
 target/
-
+target/classes/
 *.jar
 
 application.properties
