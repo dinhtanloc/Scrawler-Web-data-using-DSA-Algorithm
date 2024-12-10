@@ -102,6 +102,12 @@
         <artifactId>spring-ai-mongodb-atlas-store-spring-boot-starter</artifactId>
         <version>LATEST</version>
     </dependency>
+
+    <dependency>
+        <groupId>ai.djl.spring</groupId>
+        <artifactId>djl-spring-boot-starter-pytorch-auto</artifactId>
+        <version>0.7</version>
+    </dependency>
   
   </dependencies>
   <build>

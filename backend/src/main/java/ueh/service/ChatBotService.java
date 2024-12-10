@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChatBotService {
-    @Autowired
-    @Qualifier("openAiChatModel")
+    // @Autowired
+    // @Qualifier("openAiChatModel")
     private ChatModel chatClient;
-    @Autowired
-    private DataRetrievalService dataRetrievalService;
+    // @Autowired
+    // private DataRetrievalService dataRetrievalService
 
     private final String PROMPT_BLUEPRINT = """
         Answer the query strictly referring the provided context:
@@ -27,9 +27,10 @@ public class ChatBotService {
         I'm sorry I don't have the information you are looking for.
     """;
 
-    public String chat(String query) {
-        return chatClient.call(createPrompt(query, dataRetrievalService.searchData(query)));
-    }
+    // public String chat(String query) {
+    //     return "Hello World';
+    //     // return chatClient.call(createPrompt(query, dataRetrievalService.searchData(query)));
+    // }
 
     private String createPrompt(String query, List<Document> context) {
         PromptTemplate promptTemplate = new PromptTemplate(PROMPT_BLUEPRINT);
@@ -37,4 +38,4 @@ public class ChatBotService {
         promptTemplate.add("context", context);
         return promptTemplate.render();
     }
-}
+};
