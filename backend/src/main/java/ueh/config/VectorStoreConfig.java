@@ -1,7 +1,7 @@
 package ueh.config;
 
-import org.springframework.ai.vectorstore.mongodb.MongoDBAtlasVectorStore;
-import org.springframework.ai.vectorstore.mongodb.MongoDBVectorStoreConfig;
+import org.springframework.ai.vectorstore.MongoDBAtlasVectorStore;
+import org.springframework.ai.vectorstore.MongoDBAtlasVectorStore.MongoDBVectorStoreConfig;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,10 +24,15 @@ public class VectorStoreConfig {
         return new MongoDBAtlasVectorStore(mongoTemplate, embeddingModel, config, true);
     }
 
-    @Bean
-    public EmbeddingModel embeddingModel() {
-        return new org.springframework.ai.embedding.openai.OpenAiEmbeddingModel(
-            new org.springframework.ai.openai.OpenAiApi(System.getenv("SPRING_AI_OPENAI_API_KEY"))
-        );
-    }
+    // @Value("${spring.ai.openai.api-key}")
+    // private String openAiKey;
+    // @Bean
+    // public EmbeddingModel embeddingModel() {
+    //     return new OpenAiEmbeddingModel(new OpenAiApi(openAiKey));
+    // }
+    // @Bean
+    // public VectorStore mongodbVectorStore(MongoTemplate mongoTemplate, EmbeddingModel embeddingModel) {
+    //     return new MongoDBAtlasVectorStore(mongoTemplate, embeddingModel,
+    //             MongoDBAtlasVectorStore.MongoDBVectorStoreConfig.builder().build(), true);
+    // }
 }
