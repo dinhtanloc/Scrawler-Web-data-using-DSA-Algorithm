@@ -1,5 +1,7 @@
 package ueh.config;
 
+import org.springframework.ai.document.MetadataMode;
+import org.springframework.ai.embedding.EmbeddingResponse;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.openai.OpenAiEmbeddingOptions;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
@@ -8,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
 import io.github.cdimascio.dotenv.Dotenv;
-
+import java.util.List;
 @Configuration
 public class EmbeddingModelConfig {
 
@@ -30,6 +32,13 @@ public class EmbeddingModelConfig {
             .build();
 
         OpenAiApi openAiApi = new OpenAiApi(apiKey);
-        return new OpenAiEmbeddingModel(openAiApi, options);
+        return new OpenAiEmbeddingModel(openAiApi,MetadataMode.EMBED, options);
+    }
+
+    public void computeSimilarity() {
+        EmbeddingResponse embeddingResponse = this.embeddingModel()
+            .embedForResponse(List.of("Hello World", "World is big and salvation is near"));
+        
+        System.out.println(embeddingResponse);
     }
 }
