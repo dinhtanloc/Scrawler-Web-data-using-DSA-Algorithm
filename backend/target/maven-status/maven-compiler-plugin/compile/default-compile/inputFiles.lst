@@ -7,6 +7,7 @@ C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\QueueConfig.java
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\controller\TextController.java
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\repository\ChunkRepository.java
+C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\dto\WikiDocument.java
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\DotenvConfig.java
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\dto\ChatRequest.java
 C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\ChatBotService.java

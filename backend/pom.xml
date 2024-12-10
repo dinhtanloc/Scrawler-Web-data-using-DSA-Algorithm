@@ -4,11 +4,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-<<<<<<< HEAD
-    <version>3.1.3</version>
-=======
     <version>3.2.3</version>
->>>>>>> 1465023765224ce3fdb354bc3dbc7f952f7632d3
   </parent>
   <groupId>ueh</groupId>
   <artifactId>DSA-Finalproject</artifactId>

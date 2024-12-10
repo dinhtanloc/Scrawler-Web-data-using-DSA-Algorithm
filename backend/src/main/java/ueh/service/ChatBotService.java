@@ -9,14 +9,15 @@ import org.springframework.ai.document.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ueh.service.DataRetrievalService;
 
 @Service
 public class ChatBotService {
-    // @Autowired
-    // @Qualifier("openAiChatModel")
+    @Autowired
+    @Qualifier("openAiChatModel")
     private ChatModel chatClient;
-    // @Autowired
-    // private DataRetrievalService dataRetrievalService
+    @Autowired
+    private DataRetrievalService dataRetrievalService;
 
     private final String PROMPT_BLUEPRINT = """
         Answer the query strictly referring the provided context:
@@ -27,10 +28,9 @@ public class ChatBotService {
         I'm sorry I don't have the information you are looking for.
     """;
 
-    // public String chat(String query) {
-    //     return "Hello World';
-    //     // return chatClient.call(createPrompt(query, dataRetrievalService.searchData(query)));
-    // }
+    public String chat(String query) {
+        return chatClient.call(createPrompt(query, dataRetrievalService.searchData(query)));
+    }
 
     private String createPrompt(String query, List<Document> context) {
         PromptTemplate promptTemplate = new PromptTemplate(PROMPT_BLUEPRINT);
@@ -38,4 +38,11 @@ public class ChatBotService {
         promptTemplate.add("context", context);
         return promptTemplate.render();
     }
+
+    // @PostMapping("/chat")
+    // public Map<String, String> postChat(@RequestBody Map<String, String> request) {
+    //     String query = request.get("query");
+    //     String answer = chatBotService.chat(query);
+    //     return Map.of("answer", answer);
+    // }
 };
