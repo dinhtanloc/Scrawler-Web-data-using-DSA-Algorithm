@@ -37,12 +37,12 @@ public class HtmlQueueController {
     @PostMapping(value = "/crawl", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> crawlHtml(@RequestBody Map<String, String> body) {
         String url = body.get("url");
-        System.out.println("Crawling URL: " + url);
+        // System.out.println("Crawling URL: " + url);
 
         try {
             HtmlData htmlData = crawlerService.crawl(url);
             String rawHtml = htmlData.getRawHtml();
-            System.out.println("HTML Content: " + rawHtml);
+            // System.out.println("HTML Content: " + rawHtml);
 
             Map<String, Object> response = Map.of(
                 "html", rawHtml,
@@ -79,7 +79,7 @@ public class HtmlQueueController {
         }
 
         boolean isValidHtml = HtmlTagValidator.validateWithStack(htmlContent);
-        System.out.println(isValidHtml);
+        // System.out.println(isValidHtml);
     
         // if (!isValidHtml) {
         //     Map<String, Object> errorResponse = Map.of(

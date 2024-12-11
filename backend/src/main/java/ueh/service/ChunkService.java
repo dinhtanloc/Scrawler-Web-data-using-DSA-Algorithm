@@ -1,6 +1,6 @@
 package ueh.service;
 
-import ueh.repository.ChunkRepository;
+import ueh.repository.VectorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ai.document.Document;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class ChunkService {
 
     @Autowired
-    private ChunkRepository chunkRepository;
+    private VectorRepository vectorRepository;
 
     // @Autowired
     // private EmbeddingModel embeddingModel;
@@ -23,17 +23,20 @@ public class ChunkService {
     @Autowired
     private MongoDBAtlasVectorStore vectorStore;
 
+    
 
-    public Chunk saveChunk(Chunk chunk) {
-        // Chunk savedChunk = chunkRepository.save(chunk);
 
-        Map<String, Object> metadata = chunk.getMetadata();
+    // public Chunk saveChunk(Chunk chunk) {
+    //     // Chunk savedChunk = chunkRepository.save(chunk);
 
-        Document document = new Document(chunk.getText());
-        vectorStore.add(List.of(document)); 
+    //     Map<String, Object> metadata = chunk.getMetadata();
 
-        return chunk;
-    }
+    //     Document document = new Document(chunk.getText());
+    //     // System.out.println("Document: " + document.getContent());
+    //     vectorStore.add(List.of(document)); 
+
+    //     return chunk;
+    // }
 
 
     public void embededHTML(String htmlContent) {
@@ -45,9 +48,14 @@ public class ChunkService {
         for (Document chunk : chunks) {
             Chunk chunkEntity = new Chunk();
             chunkEntity.setText(chunk.getContent());
+            // System.out.println("Chunk: " + chunkEntity.getText());
             // chunkEntity.setEmbedding(chunkEntity.getText(), embeddingModel);
-            saveChunk(chunkEntity);
+            vectorRepository.saveChunk(chunkEntity);
         }
+    }
+
+    public List<Document> findSimilarDocuments(String searchText) {
+        return vectorRepository.findSimilarDocuments(searchText);
     }
 
 

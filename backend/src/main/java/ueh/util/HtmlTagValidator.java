@@ -70,7 +70,7 @@ public class HtmlTagValidator {
     public static void main(String[] args) {
         HtmlTagValidator validator = new HtmlTagValidator();
         
-        System.out.println(validator.validateWithStack("<div>Valid HTML Tag</div>"));  // Output: true
-        System.out.println(validator.validateWithStack("<div>Invalid HTML Tag"));    // Output: false
+        // System.out.println(validator.validateWithStack("<div>Valid HTML Tag</div>"));  // Output: true
+        // System.out.println(validator.validateWithStack("<div>Invalid HTML Tag"));    // Output: false
     }
 }
