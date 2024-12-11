@@ -1,7 +1,6 @@
 package ueh.controller;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import ueh.model.HtmlData;
 import ueh.service.HtmlCrawlerService;
@@ -86,39 +83,105 @@ public class HtmlQueueController {
     //     return filterService.processQueue();
     // }
 
-    @PostMapping(value="/read", consumes = MediaType.APPLICATION_JSON_VALUE)
+    /*@PostMapping(value="/read", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> readHtml(@RequestBody Map<String, String> body) {
         String htmlContent = body.get("htmlContent");
         System.out.println(htmlContent);
         if (htmlContent == null || htmlContent.isEmpty()) {
             throw new IllegalArgumentException("Missing input: 'htmlContent' must be provided");
         }
-    
+        // boolean isValid = HTMLsyntax(content);
+        // if(!isvalid){
+        //     return exception
+        // }
         Map<String, Object> contentMap = filterService.classifyContent(htmlContent);
         System.out.println(contentMap); 
         return ResponseEntity.ok(contentMap);
+    }*/
+
+    @PostMapping(value = "/read", consumes = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity<Map<String, Object>> readHtml(@RequestBody Map<String, String> body) {
+    String htmlContent = body.get("htmlContent");
+    System.out.println("HTML content received:\n" + htmlContent); // Log nội dung HTML nhận được
+
+    if (htmlContent == null || htmlContent.isEmpty()) {
+        throw new IllegalArgumentException("Missing input: 'htmlContent' must be provided");
     }
 
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-public ResponseEntity<String> uploadHtmlFile(@RequestParam("file") MultipartFile file) {
     try {
-        // Đọc nội dung file
-        String htmlContent = new String(file.getBytes(), StandardCharsets.UTF_8);
-        System.out.println("HTML content received:\n" + htmlContent); // Log nội dung HTML
+        System.out.println("Validating and processing HTML content..."); // Log trạng thái xử lý
 
-        // Kiểm tra cú pháp và xử lý
+        // Kiểm tra cú pháp và phân loại nội dung HTML
         filterService.validateAndClassifyContent(htmlContent);
 
-        return ResponseEntity.ok("HTML content is valid and has been processed.");
+        // Nếu không ném ngoại lệ, tức là cú pháp hợp lệ
+        System.out.println("HTML validation successful."); // Log thành công
+
+        Map<String, Object> response = Map.of(
+            "status", "success",
+            "message", "HTML content is valid and has been processed."
+        );
+        return ResponseEntity.ok(response);
+
     } catch (IllegalArgumentException e) {
-        System.out.println("Validation error: " + e.getMessage());
-        return ResponseEntity.badRequest().body("HTML syntax error: " + e.getMessage());
-    } catch (IOException e) {
-        System.out.println("File processing error: " + e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process file: " + e.getMessage());
+        System.out.println("Validation error: " + e.getMessage()); // Log lỗi cú pháp
+
+        Map<String, Object> errorResponse = Map.of(
+            "status", "error",
+            "message", "HTML syntax error: " + e.getMessage()
+        );
+        return ResponseEntity.badRequest().body(errorResponse);
+
+    } catch (Exception e) {
+        System.out.println("Processing error: " + e.getMessage()); // Log lỗi hệ thống
+
+        Map<String, Object> errorResponse = Map.of(
+            "status", "error",
+            "message", "Failed to process HTML content: " + e.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }
 
+
+    /*@PostMapping(value = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity<Map<String, Object>> uploadHtmlContent(@RequestBody Map<String, String> body) {
+    String htmlContent = body.get("htmlContent");
+    System.out.println("HTML content received:\n" + htmlContent); // Log nội dung HTML
+
+    if (htmlContent == null || htmlContent.isEmpty()) {
+        throw new IllegalArgumentException("Missing input: 'htmlContent' must be provided");
+    }
+
+    try {
+        // Kiểm tra cú pháp và xử lý nội dung
+        filterService.validateAndClassifyContent(htmlContent);
+
+        Map<String, Object> response = Map.of(
+            "status", "success",
+            "message", "HTML content is valid and has been processed."
+        );
+        return ResponseEntity.ok(response);
+
+    } catch (IllegalArgumentException e) {
+        System.out.println("Validation error: " + e.getMessage()); // Log lỗi cú pháp
+
+        Map<String, Object> errorResponse = Map.of(
+            "status", "error",
+            "message", "HTML syntax error: " + e.getMessage()
+        );
+        return ResponseEntity.badRequest().body(errorResponse);
+
+    } catch (Exception e) {
+        System.out.println("Processing error: " + e.getMessage()); // Log lỗi khác
+
+        Map<String, Object> errorResponse = Map.of(
+            "status", "error",
+            "message", "Failed to process HTML content: " + e.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+}*/
 
 
 
