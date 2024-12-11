@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ueh.service.ChunkService;
 import ueh.model.Chunk;
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/chunks")
 public class TextController {
@@ -27,6 +27,7 @@ public class TextController {
      * @param htmlContent Nội dung HTML cần xử lý.
      * @return Thông báo trạng thái.
      */
+    @CrossOrigin(origins = "*")
     @PostMapping("/save")
     public String saveHtml(@RequestBody String htmlContent) {
         try {

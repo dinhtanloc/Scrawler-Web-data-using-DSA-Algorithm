@@ -8,7 +8,7 @@ import Spinner from "@/components/Spinner";
 import { postReq } from "@/utils/fetchData";
 import { FaSearch } from "react-icons/fa";
 import "@/styles/renderContent.css";
-
+import processParsedContent from "@/utils/processParsedContent";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -19,27 +19,27 @@ export default function Home() {
 
   const router = useRouter();
 
-  // Lấy dữ liệu từ localStorage khi trang tải lần đầu
-  useEffect(() => {
-    const savedUrl = localStorage.getItem("url");
-    const savedHtmlContent = localStorage.getItem("htmlContent");
-    const savedParsedContent = localStorage.getItem("parsedContent");
+  // // Lấy dữ liệu từ localStorage khi trang tải lần đầu
+  // useEffect(() => {
+  //   const savedUrl = localStorage.getItem("url");
+  //   const savedHtmlContent = localStorage.getItem("htmlContent");
+  //   const savedParsedContent = localStorage.getItem("parsedContent");
 
-    if (savedUrl) setUrl(savedUrl);
-    if (savedHtmlContent) setHtmlContent(savedHtmlContent);
-    if (savedParsedContent) setParsedContent(JSON.parse(savedParsedContent));
-  }, []);
+  //   if (savedUrl) setUrl(savedUrl);
+  //   if (savedHtmlContent) setHtmlContent(savedHtmlContent);
+  //   if (savedParsedContent) setParsedContent(JSON.parse(savedParsedContent));
+  // }, []);
 
-  // Lưu trạng thái vào localStorage mỗi khi trạng thái thay đổi
-  useEffect(() => {
-    localStorage.setItem("url", url);
-    localStorage.setItem("htmlContent", htmlContent);
-    if (parsedContent) {
-      localStorage.setItem("parsedContent", JSON.stringify(parsedContent));
-    } else {
-      localStorage.removeItem("parsedContent");
-    }
-  }, [url, htmlContent, parsedContent]);
+  // // Lưu trạng thái vào localStorage mỗi khi trạng thái thay đổi
+  // useEffect(() => {
+  //   localStorage.setItem("url", url);
+  //   localStorage.setItem("htmlContent", htmlContent);
+  //   if (parsedContent) {
+  //     localStorage.setItem("parsedContent", JSON.stringify(parsedContent));
+  //   } else {
+  //     localStorage.removeItem("parsedContent");
+  //   }
+  // }, [url, htmlContent, parsedContent]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -65,6 +65,7 @@ export default function Home() {
     setLoading(true);
     try {
       if (htmlContent) {
+        console.log('check htmlContent', htmlContent);
         const response = await postReq("/api/html/read", { htmlContent });
         setParsedContent(response); // Ghi đè nội dung cũ
       } else {
@@ -106,14 +107,20 @@ export default function Home() {
     }
   };
 
-  const handleSave = async() => {
+  const handleSave = async(e) => {
+    console.log('check save');
+    e.preventDefault();
     if (!htmlContent) {
       alert("Nội dung HTML rỗng.");
       return;
     }
+    console.log(parsedContent);
+    const processedContent = processParsedContent(parsedContent);
+
+    console.log("Processed Content:", processedContent);
     setLoading(true);
     try {
-      const response = await postReq("/chunks/save", { htmlContent });
+      const response = await postReq("/chunks/save", { processedContent });
       alert("Lưu thành công.");
       
     } catch (error) {
@@ -291,6 +298,7 @@ export default function Home() {
             </Tooltip>
             <Tooltip text="Lưu nội dung vào cơ sở dữ liệu">
               <button
+                type="button"
                 onClick={handleSave}
                 className={`px-6 py-3 rounded-md ${
                   isDarkMode

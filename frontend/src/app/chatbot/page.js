@@ -49,10 +49,11 @@ export default function ChatbotPage() {
 
     setLoading(true);
     try {
-      const response = await postReq("chat", { "query": message });
+      const response = await postReq("/chat", { "query": message });
+      
       setMessages((prevMessages) => [
         ...prevMessages,
-        { sender: "bot", text: data.reply },
+        { sender: "bot", text: response.answer },
       ]);
     } catch (error) {
       console.error("Error fetching HTML:", error);
