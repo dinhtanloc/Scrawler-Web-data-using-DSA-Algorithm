@@ -78,9 +78,7 @@ export default function Home() {
     }
   };
 
-  const handleSave = () => {
-    alert("Nội dung đã được lưu vào cơ sở dữ liệu!");
-  };
+ 
 
   const handleChatBot = () => {
     router.push("/chatbot");
@@ -102,6 +100,25 @@ export default function Home() {
       setHtmlContent(response.html); // Ghi đè nội dung cũ
     } catch (error) {
       console.error("Error fetching HTML:", error);
+      alert("Không thể lấy nội dung HTML.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async() => {
+    if (!htmlContent) {
+      alert("Nội dung HTML rỗng.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await postReq("chat", JSON.stringify(htmlContent));
+      alert("Lưu thành công.");
+      
+    } catch (error) {
+      console.error("Error fetching HTML:", error);
+      
       alert("Không thể lấy nội dung HTML.");
     } finally {
       setLoading(false);

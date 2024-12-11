@@ -13,35 +13,59 @@ export default function ChatbotPage() {
 
   const router = useRouter();
 
-  const handleSendMessage = (message) => {
-    setMessages((prevMessages) => [...prevMessages, { sender: "user", text: message }]);
+  // const handleSendMessage = (message) => {
+  //   setMessages((prevMessages) => [...prevMessages, { sender: "user", text: message }]);
 
-    // Gửi tin nhắn đến API
-    fetch("/api/chatbot", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ message }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Thêm tin nhắn của bot vào danh sách
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "bot", text: data.reply },
-        ]);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "bot", text: "Xin lỗi, đã xảy ra lỗi!" },
-        ]);
-      });
+  //   fetch("chat", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({"query": message }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setMessages((prevMessages) => [
+  //         ...prevMessages,
+  //         { sender: "bot", text: data.reply },
+  //       ]);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       setMessages((prevMessages) => [
+  //         ...prevMessages,
+  //         { sender: "bot", text: "Xin lỗi, đã xảy ra lỗi!" },
+  //       ]);
+  //     });
+  // };
+
+
+  const handleSendMessage = async(message) => {
+    setMessages((prevMessages) => [...prevMessages, { sender: "user", text: message }]);
+    if (!url) {
+      alert("Vui lòng nhập URL.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await postReq("chat", { "query": message });
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "bot", text: data.reply },
+      ]);
+    } catch (error) {
+      console.error("Error fetching HTML:", error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "bot", text: "Xin lỗi, đã xảy ra lỗi!" },
+      ]);
+      alert("Không thể lấy nội dung HTML.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Cuộn tới tin nhắn mới nhất
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -53,9 +77,7 @@ export default function ChatbotPage() {
       className={`min-h-screen flex justify-center bg-gray-100 dark:bg-gray-900`}
     >
       <div className="relative w-full max-w-screen-lg bg-white dark:bg-gray-800 rounded-lg shadow-lg flex flex-col h-full">
-        {/* Header */}
         <header className="relative p-4 bg-red-500 text-white text-center text-xl font-bold rounded-t-lg">
-          {/* Nút quay về */}
           <button
             onClick={() => router.push("/")}
             className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-2xl"
@@ -65,7 +87,6 @@ export default function ChatbotPage() {
           Chatbot
         </header>
 
-        {/* Khu vực hiển thị tin nhắn */}
         <div
           className="flex-1 overflow-y-auto p-4"
           style={{
@@ -76,11 +97,9 @@ export default function ChatbotPage() {
           {messages.map((msg, index) => (
             <MessageBubble key={index} sender={msg.sender} text={msg.text} />
           ))}
-          {/* Thẻ đánh dấu để cuộn tới */}
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Khu vực nhập liệu */}
         <div
           className="bg-gray-200 dark:bg-gray-700 p-4"
           style={{

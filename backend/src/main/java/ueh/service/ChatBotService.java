@@ -39,10 +39,5 @@ public class ChatBotService {
         return promptTemplate.render();
     }
 
-    // @PostMapping("/chat")
-    // public Map<String, String> postChat(@RequestBody Map<String, String> request) {
-    //     String query = request.get("query");
-    //     String answer = chatBotService.chat(query);
-    //     return Map.of("answer", answer);
-    // }
+    
 };
