@@ -1,20 +1,24 @@
 package ueh.controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
-
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import ueh.model.HtmlData;
 import ueh.service.HtmlCrawlerService;
 import ueh.service.HtmlFilterService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.http.MediaType;
-import org.springframework.http.HttpStatus;
-
-import java.io.IOException;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -94,4 +98,28 @@ public class HtmlQueueController {
         System.out.println(contentMap); 
         return ResponseEntity.ok(contentMap);
     }
+
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+public ResponseEntity<String> uploadHtmlFile(@RequestParam("file") MultipartFile file) {
+    try {
+        // Đọc nội dung file
+        String htmlContent = new String(file.getBytes(), StandardCharsets.UTF_8);
+        System.out.println("HTML content received:\n" + htmlContent); // Log nội dung HTML
+
+        // Kiểm tra cú pháp và xử lý
+        filterService.validateAndClassifyContent(htmlContent);
+
+        return ResponseEntity.ok("HTML content is valid and has been processed.");
+    } catch (IllegalArgumentException e) {
+        System.out.println("Validation error: " + e.getMessage());
+        return ResponseEntity.badRequest().body("HTML syntax error: " + e.getMessage());
+    } catch (IOException e) {
+        System.out.println("File processing error: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process file: " + e.getMessage());
+    }
+}
+
+
+
+
 }
