@@ -97,7 +97,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await postReq("/api/html/crawl", { url });
-      setHtmlContent(response.html); // Ghi đè nội dung cũ
+      setHtmlContent(response.html); 
     } catch (error) {
       console.error("Error fetching HTML:", error);
       alert("Không thể lấy nội dung HTML.");
@@ -113,7 +113,7 @@ export default function Home() {
     }
     setLoading(true);
     try {
-      const response = await postReq("chat", JSON.stringify(htmlContent));
+      const response = await postReq("/chunks/save", { htmlContent });
       alert("Lưu thành công.");
       
     } catch (error) {
