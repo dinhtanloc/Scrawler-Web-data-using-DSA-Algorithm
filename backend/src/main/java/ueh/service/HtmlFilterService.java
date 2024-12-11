@@ -3,6 +3,8 @@ package ueh.service;
 import ueh.model.HtmlData;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.parser.Parser;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Stack;
+import ueh.util.Queue;
 
 @Service
 public class HtmlFilterService {
@@ -44,6 +48,57 @@ public class HtmlFilterService {
 
         return processedContent.toString();
     }
+
+
+    // public boolean validateHtmlContent(String rawHtml) {
+    //     if (rawHtml == null || rawHtml.isEmpty()) {
+    //         return false;
+    //     }
+
+    //     Stack<String> tagStack = new Stack<>();
+    //     boolean insideTag = false;
+    //     StringBuilder currentTag = new StringBuilder();
+
+    //     for (int i = 0; i < rawHtml.length(); i++) {
+    //         char currentChar = rawHtml.charAt(i);
+
+    //         if (currentChar == '<') {
+    //             insideTag = true;
+    //             currentTag.setLength(0);
+    //         }
+
+    //         if (insideTag) {
+    //             currentTag.append(currentChar);
+    //         }
+
+    //         if (currentChar == '>') {
+    //             insideTag = false;
+    //             String tag = currentTag.toString().trim();
+
+    //             if (tag.startsWith("</")) {
+    //                 if (tagStack.isEmpty()) {
+    //                     return false;
+    //                 }
+
+    //                 String openingTag = tagStack.pop();
+    //                 String closingTag = tag.substring(2, tag.length() - 1).trim();
+    //                 if (!openingTag.equals(closingTag)) {
+    //                     return false;
+    //                 }
+
+    //             } else if (tag.startsWith("<") && !tag.endsWith("/>")) {
+    //                 String openingTag = tag.substring(1, tag.length() - 1).trim();
+    //                 tagStack.push(openingTag);
+    //             }
+    //         }
+    //     }
+
+    //     return tagStack.isEmpty();
+    // }
+
+   
+
+
 
     public Map<String, Object> classifyContent(String rawHtml) {
         Map<String, Object> tagContentMap = new HashMap<>();

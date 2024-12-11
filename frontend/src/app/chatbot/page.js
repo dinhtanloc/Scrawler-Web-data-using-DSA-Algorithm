@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import MessageBubble from "@/components/MessageBubble";
 import ChatInput from "@/components/ChatInput";
+import { postReq } from "@/utils/fetchData";
 
 export default function ChatbotPage() {
   const [messages, setMessages] = useState([
@@ -42,12 +43,13 @@ export default function ChatbotPage() {
 
   const handleSendMessage = async(message) => {
     setMessages((prevMessages) => [...prevMessages, { sender: "user", text: message }]);
-    if (!url) {
-      alert("Vui lòng nhập URL.");
-      return;
-    }
+    // if (!url) {
+    //   alert("Vui lòng nhập URL.");
+    //   return;
+    // }
 
-    setLoading(true);
+    console.log("message", message);
+
     try {
       const response = await postReq("/chat", { "query": message });
       
@@ -63,7 +65,6 @@ export default function ChatbotPage() {
       ]);
       alert("Không thể lấy nội dung HTML.");
     } finally {
-      setLoading(false);
     }
   };
 

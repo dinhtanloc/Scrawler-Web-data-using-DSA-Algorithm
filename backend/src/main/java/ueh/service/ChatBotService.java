@@ -29,6 +29,7 @@ public class ChatBotService {
     """;
 
     public String chat(String query) {
+        System.out.println(dataRetrievalService.searchData(query));
         return chatClient.call(createPrompt(query, dataRetrievalService.searchData(query)));
     }
 

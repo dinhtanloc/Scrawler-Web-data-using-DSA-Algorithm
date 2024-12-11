@@ -73,7 +73,7 @@ export default function Home() {
       }
     } catch (error) {
       console.error("Error parsing HTML:", error);
-      alert("Không thể đọc nội dung HTML.");
+      alert("Error parsing HTML:", error);
     } finally {
       setLoading(false);
     }

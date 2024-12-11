@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
-
 import java.io.IOException;
+import ueh.util.HtmlTagValidator;
 
 // @CrossOrigin(origins = "http://localhost:3000")
 @CrossOrigin(origins = "*")
@@ -74,13 +74,22 @@ public class HtmlQueueController {
     @PostMapping(value="/read", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> readHtml(@RequestBody Map<String, String> body) {
         String htmlContent = body.get("htmlContent");
-        System.out.println(htmlContent);
         if (htmlContent == null || htmlContent.isEmpty()) {
             throw new IllegalArgumentException("Missing input: 'htmlContent' must be provided");
         }
+
+        boolean isValidHtml = HtmlTagValidator.validateWithStack(htmlContent);
+        System.out.println(isValidHtml);
     
+        // if (!isValidHtml) {
+        //     Map<String, Object> errorResponse = Map.of(
+        //         "error", "Invalid HTML content",
+        //         "status", 400
+        //     );
+        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        // }
+
         Map<String, Object> contentMap = filterService.classifyContent(htmlContent);
-        System.out.println(contentMap); 
         return ResponseEntity.ok(contentMap);
     }
 }

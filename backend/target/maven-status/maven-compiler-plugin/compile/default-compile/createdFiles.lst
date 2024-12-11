@@ -3,6 +3,7 @@ ueh\service\DataRetrievalService.class
 ueh\controller\ChatbotController.class
 ueh\service\HtmlFilterService.class
 ueh\model\Chunk.class
+ueh\util\HtmlTagValidator.class
 ueh\config\AdvisorConfiguration.class
 ueh\service\QueueService.class
 ueh\config\QueueConfig.class
