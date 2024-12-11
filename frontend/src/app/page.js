@@ -1,18 +1,45 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Tooltip from "@/components/Tooltip";
 import UploadHTML from "@/components/UploadHTML";
 import Spinner from "@/components/Spinner";
-import {getReq, postReq} from "@/utils/fetchData";
-import { FaSearch } from 'react-icons/fa';
+import { postReq } from "@/utils/fetchData";
+import { FaSearch } from "react-icons/fa";
+import "@/styles/renderContent.css";
+
 
 export default function Home() {
   const [url, setUrl] = useState("");
   const [htmlContent, setHtmlContent] = useState("");
-  const [parsedContent, setParsedContent] = useState("");
+  const [parsedContent, setParsedContent] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const router = useRouter();
+
+  // Lấy dữ liệu từ localStorage khi trang tải lần đầu
+  useEffect(() => {
+    const savedUrl = localStorage.getItem("url");
+    const savedHtmlContent = localStorage.getItem("htmlContent");
+    const savedParsedContent = localStorage.getItem("parsedContent");
+
+    if (savedUrl) setUrl(savedUrl);
+    if (savedHtmlContent) setHtmlContent(savedHtmlContent);
+    if (savedParsedContent) setParsedContent(JSON.parse(savedParsedContent));
+  }, []);
+
+  // Lưu trạng thái vào localStorage mỗi khi trạng thái thay đổi
+  useEffect(() => {
+    localStorage.setItem("url", url);
+    localStorage.setItem("htmlContent", htmlContent);
+    if (parsedContent) {
+      localStorage.setItem("parsedContent", JSON.stringify(parsedContent));
+    } else {
+      localStorage.removeItem("parsedContent");
+    }
+  }, [url, htmlContent, parsedContent]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -36,24 +63,16 @@ export default function Home() {
 
   const handleParseHtml = async () => {
     setLoading(true);
-  
     try {
-      // Kiểm tra nếu có nội dung HTML trong htmlContent
       if (htmlContent) {
-        const formData = new FormData();
-        formData.append("htmlContent", htmlContent);  
-  
-        const response = await postReq("/api/html/read", { "htmlContent": htmlContent });
-        setParsedContent(response);
-        console.log(response);
-  
+        const response = await postReq("/api/html/read", { htmlContent });
+        setParsedContent(response); // Ghi đè nội dung cũ
       } else {
-        console.error("Error: No HTML content provided.");
         alert("Vui lòng nhập nội dung HTML.");
       }
-  
     } catch (error) {
-      console.error("Error reading HTML:", error);
+      console.error("Error parsing HTML:", error);
+      alert("Không thể đọc nội dung HTML.");
     } finally {
       setLoading(false);
     }
@@ -64,40 +83,68 @@ export default function Home() {
   };
 
   const handleChatBot = () => {
-    alert("Chuyển đến Chat Bot!");
+    router.push("/chatbot");
   };
 
   const handleUpload = (html) => {
-    setHtmlContent(html); 
+    setHtmlContent(html);
   };
 
   const handleCrawlHtml = async () => {
     if (!url) {
-      alert("Please enter a URL.");
+      alert("Vui lòng nhập URL.");
       return;
     }
-    
+
     setLoading(true);
     try {
-      console.log("URL:", url);
-      const response = await postReq("/api/html/crawl", { "url": url });
-      console.log(response);
-      setHtmlContent(response.html);
-      console.log(response.html);
+      const response = await postReq("/api/html/crawl", { url });
+      setHtmlContent(response.html); // Ghi đè nội dung cũ
     } catch (error) {
       console.error("Error fetching HTML:", error);
-      alert("Failed to fetch HTML.");
+      alert("Không thể lấy nội dung HTML.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleCrawlHtml(); 
+    if (e.key === "Enter") {
+      handleCrawlHtml();
     }
   };
 
+  const renderContent = (content) => {
+    if (!content) return null;
+  
+    return (
+      <div className="space-y-4">
+        {content.title && (
+          <div className="text-lg font-bold text-center text-blue-600 border-b-2 pb-2">
+            {content.title}
+          </div>
+        )}
+        {content.h1 && (
+          <h1 className="text-2xl font-bold border-b-2 pb-2">{content.h1}</h1>
+        )}
+        {content.h2 && (
+          <h2 className="text-xl font-semibold border-l-4 pl-2 border-blue-500">
+            {content.h2}
+          </h2>
+        )}
+        {content.h3 && (
+          <h3 className="text-lg font-medium pl-4 text-gray-700">{content.h3}</h3>
+        )}
+        {content.p && (
+          <p className="text-base leading-relaxed text-justify pl-6">{content.p}</p>
+        )}
+        {content.span && (
+          <span className="text-sm italic pl-8 text-gray-600">{content.span}</span>
+        )}
+      </div>
+    );
+  };
+  
   
 
   return (
@@ -109,7 +156,7 @@ export default function Home() {
       {/* Dark Mode Toggle */}
       <button
         onClick={toggleDarkMode}
-        className={`fixed top-4 right-4 px-4 py-2 rounded-md ${
+        className={`px-4 py-2 rounded-md ${
           isDarkMode
             ? "bg-white text-black border border-gray-700"
             : "bg-black text-white"
@@ -144,10 +191,10 @@ export default function Home() {
               onChange={(e) => setUrl(e.target.value)}
             />
             <button
-              onClick={handleCrawlHtml} 
+              onClick={handleCrawlHtml}
               className="absolute top-1/2 right-3 transform -translate-y-1/2 text-lg"
             >
-              <FaSearch /> 
+              <FaSearch />
             </button>
           </div>
         </div>
@@ -176,7 +223,6 @@ export default function Home() {
               : "bg-gray-100 border border-gray-300"
           }`}
         >
-          {/* Nút HTML */}
           <div className="mb-4">
             <Tooltip text="Hiển thị nội dung HTML">
               <button
@@ -191,7 +237,6 @@ export default function Home() {
               </button>
             </Tooltip>
           </div>
-
           <h2
             className={`text-xl font-semibold mb-4 ${
               isDarkMode ? "text-red-500" : "text-red-700"
@@ -214,7 +259,6 @@ export default function Home() {
               : "bg-gray-100 border border-gray-300"
           }`}
         >
-          {/* Ba nút Đọc, Save, Chat Bot */}
           <div className="flex space-x-4 mb-4">
             <Tooltip text="Chuyển đổi HTML sang nội dung dễ đọc">
               <button
@@ -253,7 +297,6 @@ export default function Home() {
               </button>
             </Tooltip>
           </div>
-
           <h2
             className={`text-xl font-semibold mb-4 ${
               isDarkMode ? "text-red-500" : "text-red-700"
@@ -262,116 +305,10 @@ export default function Home() {
             Nội dung đã đọc
           </h2>
           <div className="overflow-auto h-[500px] border border-gray-700 p-4 rounded-md">
-            <div className={`${isDarkMode ? "text-white" : "text-black"}`}>
-            {parsedContent && renderParsedContent(parsedContent)}
-            </div>
+            {renderContent(parsedContent)}
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-
-
-const renderContent = (content) => {
-  if (typeof content !== 'object' || content === null) return null;
-
-  const renderNode = (node, keyPrefix = '') => {
-    if (Array.isArray(node)) {
-      return node.map((item, index) => renderNode(item, `${keyPrefix}-${index}`));
-    } else if (typeof node === 'object') {
-      return Object.entries(node).map(([key, value], index) =>
-        <div key={`${keyPrefix}-${key}-${index}`} className="my-2">
-          <strong>{key}:</strong> {renderNode(value, `${keyPrefix}-${key}`)}
-        </div>
-      );
-    } else {
-      return <span>{node}</span>;
-    }
-  };
-
-  return <div>{renderNode(content)}</div>;
-};
-
-
-const renderWithTags = (content) => {
-  if (typeof content !== 'object' || content === null) return null;
-
-  const renderElement = (tag, data, key) => {
-    if (!data) return null;
-    return Array.isArray(data)
-      ? data.map((item, i) => React.createElement(tag, { key: `${key}-${i}` }, item))
-      : React.createElement(tag, { key }, data);
-  };
-
-  return (
-    <div>
-      {['p', 'h2', 'h3', 'div', 'span'].map((tag) =>
-        content[tag] && renderElement(tag, content[tag], tag)
-      )}
-      {content.title && <h1>{content.title}</h1>}
-    </div>
-  );
-};
-
-
-
-const renderContentFlat = (content) => {
-  if (typeof content !== 'object' || content === null) return null;
-
-  return (
-    <div>
-      {Object.entries(content).map(([key, value], index) => {
-        if (Array.isArray(value)) {
-          // Nếu giá trị là mảng, hiển thị danh sách
-          return (
-            <div key={index} className="my-2">
-              <strong>{key}:</strong>
-              <ul className="list-disc list-inside">
-                {value.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          );
-        } else if (typeof value === 'string' || typeof value === 'number') {
-          // Nếu giá trị là chuỗi hoặc số, hiển thị trực tiếp
-          return (
-            <div key={index} className="my-2">
-              <strong>{key}:</strong> <span>{value}</span>
-            </div>
-          );
-        } else {
-          // Nếu giá trị là object lồng nhau, chỉ hiển thị lớp đầu tiên
-          return (
-            <div key={index} className="my-2">
-              <strong>{key}:</strong> <em>[Object]</em>
-            </div>
-          );
-        }
-      })}
-    </div>
-  );
-};
-
-const renderParsedContent = (content) => {
-  if (typeof content !== 'object' || !content) return null;
-
-  return (
-    <div>
-      {Object.entries(content).map(([tag, values], idx) => {
-        if (Array.isArray(values)) {
-          // Tạo phần tử cho mỗi giá trị trong mảng
-          return values.map((value, index) =>
-            React.createElement(tag, { key: `${tag}-${idx}-${index}` }, value)
-          );
-        } else if (typeof values === "string") {
-          // Giá trị đơn
-          return React.createElement(tag, { key: `${tag}-${idx}` }, values);
-        }
-        return null;
-      })}
-    </div>
-  );
-};
