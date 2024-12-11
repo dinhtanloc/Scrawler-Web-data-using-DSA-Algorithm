@@ -28,21 +28,11 @@ public class VectorStoreConfig {
         MongoDBVectorStoreConfig config = MongoDBVectorStoreConfig.builder()
             .withCollectionName("chunks") 
             .withVectorIndexName("vector_index") 
-            .withPathName("vector") 
+            .withPathName("embedding") 
             .build();
 
         return new MongoDBAtlasVectorStore(mongoTemplate, embeddingModel, config, true);
     }
 
-    // @Value("${spring.ai.openai.api-key}")
-    // private String openAiKey;
-    // @Bean
-    // public EmbeddingModel embeddingModel() {
-    //     return new OpenAiEmbeddingModel(new OpenAiApi(openAiKey));
-    // }
-    // @Bean
-    // public VectorStore mongodbVectorStore(MongoTemplate mongoTemplate, EmbeddingModel embeddingModel) {
-    //     return new MongoDBAtlasVectorStore(mongoTemplate, embeddingModel,
-    //             MongoDBAtlasVectorStore.MongoDBVectorStoreConfig.builder().build(), true);
-    // }
+    
 }
