@@ -75,20 +75,23 @@ public class HtmlQueueController {
     @PostMapping(value="/read", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> readHtml(@RequestBody Map<String, String> body) {
         String htmlContent = body.get("htmlContent");
+        boolean isUrlsearch = Boolean.parseBoolean(body.get("urlCheck"));
+        System.out.println("isUrlsearch: " + isUrlsearch);
         if (htmlContent == null || htmlContent.isEmpty()) {
             throw new IllegalArgumentException("Missing input: 'htmlContent' must be provided");
         }
 
-        // boolean isValidHtml = filterService.validate(htmlContent);
-        // System.out.println(isValidHtml);
-    
-        // if (!isValidHtml) {
-        //     Map<String, Object> errorResponse = Map.of(
-        //         "error", "Invalid HTML content",
-        //         "status", 400
-        //     );
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-        // }
+        if (!isUrlsearch) {
+            
+            boolean isValidHtml = filterService.validate(htmlContent);
+            if (!isValidHtml) {
+                Map<String, Object> errorResponse = Map.of(
+                    "error", "Invalid HTML content",
+                    "status", 400
+                );
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+        }
 
         Map<String, Object> contentMap = filterService.classifyContent(htmlContent);
         return ResponseEntity.ok(contentMap);

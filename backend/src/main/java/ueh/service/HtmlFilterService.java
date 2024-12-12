@@ -28,23 +28,13 @@ public class HtmlFilterService {
 
     private final Queue<String> htmlQueue= new Queue<>(); 
 
-    /**
-     * Phân loại các thẻ HTML chứa nội dung và đẩy vào queue.
-     */
-    public void classifyAndEnqueueContent(String rawHtml) {
-        Document document = Jsoup.parse(rawHtml);
-        Elements contentElements = document.select("title, p, h1, h2, h3, h4, h5, h6, div, span");
 
-        for (Element element : contentElements) {
-            HtmlData htmlData = new HtmlData(element.outerHtml());
-            queueService.enqueue(htmlData);
-        }
-    }
 
     /**
      * Xử lý các thẻ HTML trong queue.
      */
     public String processQueue() {
+ 
         StringBuilder processedContent = new StringBuilder();
 
         while (!queueService.isEmpty()) {
@@ -57,57 +47,146 @@ public class HtmlFilterService {
 
 
     public boolean validate(String rawHtml) {
-        List<String> openTags = new ArrayList<>(); 
+        List<String> openTags = new ArrayList<>();
+        List<String> selfClosingTags = List.of("img", "br", "hr", "input", "link", "meta", "a", "area", "base", "col", "embed", "param", "source", "track", "wbr");
+        List<String> svgTags = List.of("svg", "circle", "rect", "path", "g", 
+            "line", "polyline", "polygon", "ellipse", 
+            "defs", "mask", "pattern", "text", "use",
+            "image", "foreignObject", "clippath", "tspan",
+            "a", "marker", "filter", "symbol"
+        );
 
-        List<String> selfClosingTags = List.of("img", "br", "hr", "input", "link", "meta", "area", "base", "col", "embed", "param", "source", "track", "wbr");
-
+    
         Pattern pattern = Pattern.compile("<(/?\\w+)[^>]*>");
         Matcher matcher = pattern.matcher(rawHtml);
-
+    
         while (matcher.find()) {
-            String tag = matcher.group(1); 
-            htmlQueue.enqueue(tag.trim());
-            System.out.println("Enqueued tag: " + tag.trim()); 
+            String tag = matcher.group(1);
+            if (svgTags.contains(tag)) {
+                // System.out.println("SVG tag detected and skipped: " + tag);
+                continue; // Bỏ qua SVG tags
+            }
+            htmlQueue.enqueue(tag.trim()); // Chỉ thêm vào queue nếu không phải là SVG
+            // System.out.println("Enqueued tag: " + tag.trim());
         }
-
+    
         while (!htmlQueue.isEmpty()) {
             String tag = htmlQueue.dequeue();
-            System.out.println("Dequeued tag: " + tag); 
-            System.out.println("Open tags before processing: " + openTags); 
-
+            // System.out.println("Dequeued tag: " + tag);
+            // System.out.println("Open tags before processing: " + openTags);
+    
             if (selfClosingTags.contains(tag)) {
-                System.out.println("Self-closing tag detected and processed: " + tag); 
+                // System.out.println("Self-closing tag detected and processed: " + tag);
                 continue;
             }
-
+    
             if (!tag.startsWith("/")) {
                 openTags.add(tag);
-                System.out.println("Added to open tags: " + tag); 
+                // System.out.println("Added to open tags: " + tag);
             } else {
                 if (openTags.isEmpty() || !openTags.get(openTags.size() - 1).equals(tag.substring(1))) {
-                    System.out.println("Syntax error detected. Tag mismatch or unmatched closing tag: " + tag); 
-                    return false; 
+                    // System.out.println("Syntax error detected. Tag mismatch or unmatched closing tag: " + tag);
+                    return false;
                 }
-                String matchedTag = openTags.remove(openTags.size() - 1); 
-                System.out.println("Matched closing tag: " + tag + " with opening tag: " + matchedTag);
+                String matchedTag = openTags.remove(openTags.size() - 1);
+                // System.out.println("Matched closing tag: " + tag + " with opening tag: " + matchedTag);
             }
-
-            System.out.println("Open tags after processing: " + openTags); 
+    
+            // System.out.println("Open tags after processing: " + openTags);
         }
-
+    
         if (!openTags.isEmpty()) {
-            System.out.println("Syntax error detected. Unmatched opening tags remain: " + openTags); 
+            // System.out.println("Syntax error detected. Unmatched opening tags remain: " + openTags);
             return false;
         }
-
-        System.out.println("Validation successful. All tags matched."); 
+    
+        // System.out.println("Validation successful. All tags matched.");
         return true;
     }
-
-   
+    
+    
+    
+    
+    
 
 
     public Map<String, Object> classifyContent(String rawHtml) {
+        Map<String, Object> tagContentMap = new HashMap<>();
+        Queue<String> openTags = new Queue<>();
+        List<String> selfClosingTags = List.of("img", "br", "hr", "input", "link", "meta", "area", "base", "col", "embed", "param", "source", "track", "wbr");
+        String[] tags = {"title", "p", "h1", "h2", "h3", "h4", "h5", "h6"};
+    
+        Pattern pattern = Pattern.compile("<(/?\\w+)[^>]*>([^<]*)");
+        Matcher matcher = pattern.matcher(rawHtml);
+
+        
+    
+        while (matcher.find()) {
+            String tag = matcher.group(1).trim();
+            String content = matcher.group(2).trim();
+    
+            openTags.enqueue(tag);
+    
+            if (!content.isEmpty() && List.of(tags).contains(tag)) {
+                if (tagContentMap.containsKey(tag)) {
+                    Object currentValue = tagContentMap.get(tag);
+                    if (currentValue instanceof List) {
+                        ((List<String>) currentValue).add(content);
+                    } else if (currentValue instanceof String) {
+                        List<String> contentList = new ArrayList<>();
+                        contentList.add((String) currentValue);
+                        contentList.add(content);
+                        tagContentMap.put(tag, contentList);
+                    }
+                } else {
+                    tagContentMap.put(tag, new ArrayList<>(List.of(content)));
+                }
+            }
+        }
+        for (String tag : List.of("h1", "h4")) {
+            int index = 0;
+            int startIndex = rawHtml.indexOf("<" + tag + ">", index);
+            while (startIndex != -1) {
+                int endIndex = rawHtml.indexOf("</" + tag + ">", startIndex);
+                if (endIndex != -1) {
+                    String content = rawHtml.substring(startIndex + tag.length() + 2, endIndex).trim();
+    
+                    if (!content.isEmpty() && !selfClosingTags.contains(tag)) {
+                        if (tagContentMap.containsKey(tag)) {
+                            Object currentValue = tagContentMap.get(tag);
+                            if (currentValue instanceof List) {
+                                ((List<String>) currentValue).add(content);
+                            } else if (currentValue instanceof String) {
+                                List<String> contentList = new ArrayList<>();
+                                contentList.add((String) currentValue);
+                                contentList.add(content);
+                                tagContentMap.put(tag, contentList);
+                            }
+                        } else {
+                            tagContentMap.put(tag, new ArrayList<>(List.of(content)));
+                        }
+                    }
+                    index = endIndex + tag.length() + 3; 
+                } else {
+                    break;
+                }
+                startIndex = rawHtml.indexOf("<" + tag + ">", index);
+            }
+        }
+    
+        while (!openTags.isEmpty()) {
+            String tag = openTags.dequeue();
+            if (selfClosingTags.contains(tag)) {
+                continue;
+            }
+        }
+    
+        return tagContentMap;
+    }
+    
+
+
+    public boolean validateClassify(String rawHtml) {
         Map<String, Object> tagContentMap = new HashMap<>();
         Document document = Jsoup.parse(rawHtml);
 
@@ -115,34 +194,12 @@ public class HtmlFilterService {
 
         for (String tag : tags) {
             Elements elements = document.select(tag);
-            // System.out.println(elements);
-            validate(elements.toString());
+            if(!validate(elements.toString())){
+                return false;
+            };
 
-            for (Element element : elements) {
-                String content = element.text().trim();
-                // System.out.println("Tag: " + tag + ", Content: " + content);
-
-                if (!content.isEmpty()) {
-                    if (tagContentMap.containsKey(tag)) {
-                        Object existingValue = tagContentMap.get(tag);
-
-                        if (existingValue instanceof List) {
-                            @SuppressWarnings("unchecked")
-                            List<String> contentList = (List<String>) existingValue;
-                            contentList.add(content);
-                        } else {
-                            List<String> contentList = new ArrayList<>();
-                            contentList.add((String) existingValue);
-                            contentList.add(content);
-                            tagContentMap.put(tag, contentList);
-                        }
-                    } else {
-                        tagContentMap.put(tag, content);
-                    }
-                }
-            }
         }
 
-        return tagContentMap;
+        return true;
     }
 }

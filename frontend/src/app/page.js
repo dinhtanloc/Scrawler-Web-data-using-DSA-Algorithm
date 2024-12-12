@@ -8,38 +8,23 @@ import Spinner from "@/components/Spinner";
 import { postReq } from "@/utils/fetchData";
 import { FaSearch } from "react-icons/fa";
 import "@/styles/renderContent.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import processParsedContent from "@/utils/processParsedContent";
-
 export default function Home() {
   const [url, setUrl] = useState("");
+  const [urlCheck, setUrlCheck] = useState(false);
   const [htmlContent, setHtmlContent] = useState("");
   const [parsedContent, setParsedContent] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const router = useRouter();
 
-  // // Lấy dữ liệu từ localStorage khi trang tải lần đầu
-  // useEffect(() => {
-  //   const savedUrl = localStorage.getItem("url");
-  //   const savedHtmlContent = localStorage.getItem("htmlContent");
-  //   const savedParsedContent = localStorage.getItem("parsedContent");
-
-  //   if (savedUrl) setUrl(savedUrl);
-  //   if (savedHtmlContent) setHtmlContent(savedHtmlContent);
-  //   if (savedParsedContent) setParsedContent(JSON.parse(savedParsedContent));
-  // }, []);
-
-  // // Lưu trạng thái vào localStorage mỗi khi trạng thái thay đổi
-  // useEffect(() => {
-  //   localStorage.setItem("url", url);
-  //   localStorage.setItem("htmlContent", htmlContent);
-  //   if (parsedContent) {
-  //     localStorage.setItem("parsedContent", JSON.stringify(parsedContent));
-  //   } else {
-  //     localStorage.removeItem("parsedContent");
-  //   }
-  // }, [url, htmlContent, parsedContent]);
+  useEffect(() => {
+   
+  }, [htmlContent,parsedContent]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -65,8 +50,8 @@ export default function Home() {
     setLoading(true);
     try {
       if (htmlContent) {
-        console.log('check htmlContent', htmlContent);
-        const response = await postReq("/api/html/read", { htmlContent });
+        const response = await postReq("/api/html/read", { htmlContent, urlCheck });
+        console.log(response);
         setParsedContent(response); // Ghi đè nội dung cũ
       } else {
         alert("Vui lòng nhập nội dung HTML.");
@@ -75,6 +60,7 @@ export default function Home() {
       console.error("Error parsing HTML:", error);
       alert("Error parsing HTML:", error);
     } finally {
+      setUrlCheck(false);
       setLoading(false);
     }
   };
@@ -90,17 +76,37 @@ export default function Home() {
   };
 
   const handleCrawlHtml = async () => {
+    console.log('check crawl');
+    toast.warning("⚠️ Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     if (!url) {
-      alert("Vui lòng nhập URL.");
+      toast.warning("⚠️ Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return;
     }
 
     setLoading(true);
     try {
       const response = await postReq("/api/html/crawl", { url });
-      setHtmlContent(response.html); 
+      setHtmlContent(response.html);
+      setUrlCheck(true);
     } catch (error) {
       console.error("Error fetching HTML:", error);
+      setUrlCheck(false);
       alert("Không thể lấy nội dung HTML.");
     } finally {
       setLoading(false);
@@ -112,12 +118,13 @@ export default function Home() {
     e.preventDefault();
     if (!htmlContent) {
       alert("Nội dung HTML rỗng.");
+
       return;
     }
-    console.log(parsedContent);
+    // console.log(parsedContent);
     const processedContent = processParsedContent(parsedContent);
 
-    console.log("Processed Content:", processedContent);
+    // console.log("Processed Content:", processedContent);
     setLoading(true);
     try {
       const response = await postReq("/chunks/save", { processedContent });
@@ -177,6 +184,7 @@ export default function Home() {
         isDarkMode ? "bg-black text-white" : "bg-white text-black"
       } p-6`}
     >
+      <ToastContainer />
       {/* Dark Mode Toggle */}
       <button
         onClick={toggleDarkMode}
