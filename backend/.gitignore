@@ -1,0 +1,21 @@
+# Maven build output
+/target/
+
+# IntelliJ IDEA
+/.idea/
+
+# Visual Studio Code
+/.vscode/
+
+ref
+
+.env
+.env.local
+
+target/
+target/classes/
+*.jar
+backend/target/DSA-Finalproject-1.0-SNAPSHOT.jar
+*.jar.original
+
+

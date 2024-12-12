@@ -1,0 +1,98 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class App {
+  + App(): 
+  + main(String[]): void
+}
+class ChatBotService {
+  + ChatBotService(): 
+  + chat(String): String
+  - createPrompt(String, List<Document>): String
+}
+class ChatbotController {
+  + ChatbotController(): 
+  + postChat(Map<String, String>): Map<String, String>
+}
+class Chunk {
+  + Chunk(): 
+  - id: String
+  - text: String
+  - metadata: Map<String, Object>
+  - embedding: double[]
+   text: String
+   id: String
+   metadata: Map<String, Object>
+   embedding: double[]
+}
+class ChunkService {
+  + ChunkService(): 
+  + embededHTML(String): void
+  + findSimilarDocuments(String): List<Document>
+}
+class HtmlCrawlerService {
+  + HtmlCrawlerService(): 
+  + crawl(String): HtmlData
+}
+class HtmlData {
+  + HtmlData(String): 
+  + HtmlData(String, String): 
+  - url: String
+  - filteredHtml: String
+  - rawHtml: String
+   rawHtml: String
+   filteredHtml: String
+   url: String
+}
+class HtmlFilterService {
+  + HtmlFilterService(): 
+  + validate(String): boolean
+  + classifyContent(String): Map<String, Object>
+}
+class HtmlQueueController {
+  + HtmlQueueController(): 
+  + readHtml(Map<String, String>): ResponseEntity<Map<String, Object>>
+  + crawlHtml(Map<String, String>): ResponseEntity<Map<String, Object>>
+}
+class Node<T> {
+  ~ Node(T): 
+}
+class Queue<T> {
+  + Queue(): 
+  + enqueue(T): void
+  + peek(): T
+  + dequeue(): T
+  + size(): int
+   empty: boolean
+}
+class QueueConfig {
+  + QueueConfig(): 
+  + htmlQueue(): BlockingQueue<HtmlData>
+}
+class QueueService {
+  + QueueService(): 
+  + dequeue(): HtmlData
+  + resetQueue(): void
+  + enqueue(HtmlData): void
+   empty: boolean
+}
+class TextController {
+  + TextController(): 
+  + saveHtml(String): String
+}
+class VectorRepository {
+  + VectorRepository(): 
+  + findSimilarDocuments(String): List<Document>
+  + saveChunk(Chunk): void
+}
+class VectorStoreConfig {
+  + VectorStoreConfig(): 
+  + embeddingModel(): EmbeddingModel
+  + vectorStore(MongoTemplate, EmbeddingModel): MongoDBAtlasVectorStore
+}
+
+Node                 +-[#820000,plain]-  Queue               
+@enduml

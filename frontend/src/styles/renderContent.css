@@ -1,0 +1,51 @@
+/* renderContent.css */
+
+/* Title Styles */
+.render-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #2563eb; /* Blue */
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 0.5rem;
+}
+
+/* Heading 1 Styles */
+.render-h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 0.5rem;
+}
+
+/* Heading 2 Styles */
+.render-h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  border-left: 4px solid #2563eb; /* Blue */
+  padding-left: 0.5rem;
+}
+
+/* Heading 3 Styles */
+.render-h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  padding-left: 1rem;
+  color: #4b5563; /* Gray */
+}
+
+/* Paragraph Styles */
+.render-p {
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: justify;
+  padding-left: 1.5rem;
+}
+
+/* Span Styles */
+.render-span {
+  font-size: 0.875rem;
+  font-style: italic;
+  padding-left: 2rem;
+  color: #9ca3af; /* Light Gray */
+}
