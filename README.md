@@ -64,3 +64,7 @@ COLLECTION_NAME: chunks
 ### Ghi chú
 - Cần đảm bảo các biến môi trường được thiết lập chính xác.  
 - Hãy kiểm tra tài liệu hướng dẫn chi tiết trong các liên kết bên trên nếu gặp vấn đề.
+
+## 3. Báo cáo đồ án và kết thúc môn
+Đây là báo cáo đồ án chi tiết  [Docs](Link)
+Link video demo ở đây: [Video Demo](https://drive.google.com/file/d/1Vd2LzUqRjacyMe_mfIbyYexcm882idSw/view?usp=sharing)
