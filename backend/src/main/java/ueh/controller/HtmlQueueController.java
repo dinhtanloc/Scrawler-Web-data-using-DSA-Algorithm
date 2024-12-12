@@ -79,16 +79,16 @@ public class HtmlQueueController {
             throw new IllegalArgumentException("Missing input: 'htmlContent' must be provided");
         }
 
-        boolean isValidHtml = filterService.validate(htmlContent);
-        System.out.println(isValidHtml);
+        // boolean isValidHtml = filterService.validate(htmlContent);
+        // System.out.println(isValidHtml);
     
-        if (!isValidHtml) {
-            Map<String, Object> errorResponse = Map.of(
-                "error", "Invalid HTML content",
-                "status", 400
-            );
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-        }
+        // if (!isValidHtml) {
+        //     Map<String, Object> errorResponse = Map.of(
+        //         "error", "Invalid HTML content",
+        //         "status", 400
+        //     );
+        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        // }
 
         Map<String, Object> contentMap = filterService.classifyContent(htmlContent);
         return ResponseEntity.ok(contentMap);

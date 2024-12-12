@@ -111,13 +111,16 @@ public class HtmlFilterService {
         Map<String, Object> tagContentMap = new HashMap<>();
         Document document = Jsoup.parse(rawHtml);
 
-        String[] tags = {"title", "p", "h1", "h2", "h3", "h4", "h5", "h6", "div", "span"};
+        String[] tags = {"title", "p", "h1", "h2", "h3", "h4", "h5", "h6"};
 
         for (String tag : tags) {
             Elements elements = document.select(tag);
+            // System.out.println(elements);
+            validate(elements.toString());
 
             for (Element element : elements) {
                 String content = element.text().trim();
+                // System.out.println("Tag: " + tag + ", Content: " + content);
 
                 if (!content.isEmpty()) {
                     if (tagContentMap.containsKey(tag)) {
