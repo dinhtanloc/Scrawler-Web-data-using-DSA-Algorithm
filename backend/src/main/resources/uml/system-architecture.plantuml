@@ -4,10 +4,6 @@
 top to bottom direction
 skinparam linetype ortho
 
-class AdvisorConfiguration {
-  + AdvisorConfiguration(): 
-  + questionAnswerAdvisor(VectorStore): QuestionAnswerAdvisor
-}
 class App {
   + App(): 
   + main(String[]): void
@@ -19,33 +15,23 @@ class ChatBotService {
 }
 class ChatbotController {
   + ChatbotController(): 
-  + chat(String): Map
   + postChat(Map<String, String>): Map<String, String>
 }
 class Chunk {
   + Chunk(): 
-  - metadata: Map<String, Object>
-  - embedding: double[]
   - id: String
   - text: String
+  - metadata: Map<String, Object>
+  - embedding: double[]
    text: String
-   embedding: double[]
    id: String
    metadata: Map<String, Object>
+   embedding: double[]
 }
-interface ChunkRepository << interface >>
 class ChunkService {
   + ChunkService(): 
   + embededHTML(String): void
-  + saveChunk(Chunk): Chunk
-}
-class DataRetrievalService {
-  + DataRetrievalService(): 
-  + searchData(String): List<Document>
-}
-class DotenvConfig {
-  + DotenvConfig(): 
-  + loadDotenv(): void
+  + findSimilarDocuments(String): List<Document>
 }
 class HtmlCrawlerService {
   + HtmlCrawlerService(): 
@@ -63,14 +49,13 @@ class HtmlData {
 }
 class HtmlFilterService {
   + HtmlFilterService(): 
+  + validate(String): boolean
   + classifyContent(String): Map<String, Object>
-  + classifyAndEnqueueContent(String): void
-  + processQueue(): String
 }
 class HtmlQueueController {
   + HtmlQueueController(): 
-  + crawlHtml(Map<String, String>): ResponseEntity<Map<String, Object>>
   + readHtml(Map<String, String>): ResponseEntity<Map<String, Object>>
+  + crawlHtml(Map<String, String>): ResponseEntity<Map<String, Object>>
 }
 class Node<T> {
   ~ Node(T): 
@@ -78,9 +63,9 @@ class Node<T> {
 class Queue<T> {
   + Queue(): 
   + enqueue(T): void
+  + peek(): T
   + dequeue(): T
   + size(): int
-  + peek(): T
    empty: boolean
 }
 class QueueConfig {
@@ -89,32 +74,25 @@ class QueueConfig {
 }
 class QueueService {
   + QueueService(): 
+  + dequeue(): HtmlData
   + resetQueue(): void
   + enqueue(HtmlData): void
-  + dequeue(): HtmlData
    empty: boolean
 }
 class TextController {
   + TextController(): 
-  + saveChunk(Chunk): Chunk
   + saveHtml(String): String
 }
-class VectorDatabase {
-  + VectorDatabase(): 
-  + generateEmbedding(String): double[]
+class VectorRepository {
+  + VectorRepository(): 
+  + findSimilarDocuments(String): List<Document>
+  + saveChunk(Chunk): void
 }
 class VectorStoreConfig {
   + VectorStoreConfig(): 
-  + vectorStore(MongoTemplate, EmbeddingModel): MongoDBAtlasVectorStore
   + embeddingModel(): EmbeddingModel
-}
-class WikiDocument {
-  + WikiDocument(): 
-  - filePath: String
-  - content: String
-   filePath: String
-   content: String
+  + vectorStore(MongoTemplate, EmbeddingModel): MongoDBAtlasVectorStore
 }
 
-Node                  +-[#820000,plain]-  Queue                
+Node                 +-[#820000,plain]-  Queue               
 @enduml
