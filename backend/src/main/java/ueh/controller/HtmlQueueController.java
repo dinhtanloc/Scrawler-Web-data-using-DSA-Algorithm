@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import java.io.IOException;
-import ueh.util.HtmlTagValidator;
 
 // @CrossOrigin(origins = "http://localhost:3000")
 @CrossOrigin(origins = "*")
@@ -26,6 +25,8 @@ public class HtmlQueueController {
 
     @Autowired
     private HtmlFilterService filterService;
+
+
 
     /**
      * Crawl HTML từ URL
@@ -78,16 +79,16 @@ public class HtmlQueueController {
             throw new IllegalArgumentException("Missing input: 'htmlContent' must be provided");
         }
 
-        boolean isValidHtml = HtmlTagValidator.validateWithStack(htmlContent);
-        // System.out.println(isValidHtml);
+        boolean isValidHtml = filterService.validate(htmlContent);
+        System.out.println(isValidHtml);
     
-        // if (!isValidHtml) {
-        //     Map<String, Object> errorResponse = Map.of(
-        //         "error", "Invalid HTML content",
-        //         "status", 400
-        //     );
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-        // }
+        if (!isValidHtml) {
+            Map<String, Object> errorResponse = Map.of(
+                "error", "Invalid HTML content",
+                "status", 400
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
 
         Map<String, Object> contentMap = filterService.classifyContent(htmlContent);
         return ResponseEntity.ok(contentMap);

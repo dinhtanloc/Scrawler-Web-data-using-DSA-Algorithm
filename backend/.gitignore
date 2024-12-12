@@ -17,8 +17,5 @@ target/classes/
 *.jar
 backend/target/DSA-Finalproject-1.0-SNAPSHOT.jar
 *.jar.original
-*.properties
-application.properties
-resources/application.properties
 
 

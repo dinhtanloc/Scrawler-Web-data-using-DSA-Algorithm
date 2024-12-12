@@ -14,13 +14,19 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import ueh.util.Queue;
+
 
 @Service
 public class HtmlFilterService {
 
     @Autowired
     private QueueService queueService;
+
+    private final Queue<String> htmlQueue= new Queue<>(); 
 
     /**
      * Phân loại các thẻ HTML chứa nội dung và đẩy vào queue.
@@ -50,54 +56,55 @@ public class HtmlFilterService {
     }
 
 
-    // public boolean validateHtmlContent(String rawHtml) {
-    //     if (rawHtml == null || rawHtml.isEmpty()) {
-    //         return false;
-    //     }
+    public boolean validate(String rawHtml) {
+        List<String> openTags = new ArrayList<>(); 
 
-    //     Stack<String> tagStack = new Stack<>();
-    //     boolean insideTag = false;
-    //     StringBuilder currentTag = new StringBuilder();
+        List<String> selfClosingTags = List.of("img", "br", "hr", "input", "link", "meta", "area", "base", "col", "embed", "param", "source", "track", "wbr");
 
-    //     for (int i = 0; i < rawHtml.length(); i++) {
-    //         char currentChar = rawHtml.charAt(i);
+        Pattern pattern = Pattern.compile("<(/?\\w+)[^>]*>");
+        Matcher matcher = pattern.matcher(rawHtml);
 
-    //         if (currentChar == '<') {
-    //             insideTag = true;
-    //             currentTag.setLength(0);
-    //         }
+        while (matcher.find()) {
+            String tag = matcher.group(1); 
+            htmlQueue.enqueue(tag.trim());
+            System.out.println("Enqueued tag: " + tag.trim()); 
+        }
 
-    //         if (insideTag) {
-    //             currentTag.append(currentChar);
-    //         }
+        while (!htmlQueue.isEmpty()) {
+            String tag = htmlQueue.dequeue();
+            System.out.println("Dequeued tag: " + tag); 
+            System.out.println("Open tags before processing: " + openTags); 
 
-    //         if (currentChar == '>') {
-    //             insideTag = false;
-    //             String tag = currentTag.toString().trim();
+            if (selfClosingTags.contains(tag)) {
+                System.out.println("Self-closing tag detected and processed: " + tag); 
+                continue;
+            }
 
-    //             if (tag.startsWith("</")) {
-    //                 if (tagStack.isEmpty()) {
-    //                     return false;
-    //                 }
+            if (!tag.startsWith("/")) {
+                openTags.add(tag);
+                System.out.println("Added to open tags: " + tag); 
+            } else {
+                if (openTags.isEmpty() || !openTags.get(openTags.size() - 1).equals(tag.substring(1))) {
+                    System.out.println("Syntax error detected. Tag mismatch or unmatched closing tag: " + tag); 
+                    return false; 
+                }
+                String matchedTag = openTags.remove(openTags.size() - 1); 
+                System.out.println("Matched closing tag: " + tag + " with opening tag: " + matchedTag);
+            }
 
-    //                 String openingTag = tagStack.pop();
-    //                 String closingTag = tag.substring(2, tag.length() - 1).trim();
-    //                 if (!openingTag.equals(closingTag)) {
-    //                     return false;
-    //                 }
+            System.out.println("Open tags after processing: " + openTags); 
+        }
 
-    //             } else if (tag.startsWith("<") && !tag.endsWith("/>")) {
-    //                 String openingTag = tag.substring(1, tag.length() - 1).trim();
-    //                 tagStack.push(openingTag);
-    //             }
-    //         }
-    //     }
+        if (!openTags.isEmpty()) {
+            System.out.println("Syntax error detected. Unmatched opening tags remain: " + openTags); 
+            return false;
+        }
 
-    //     return tagStack.isEmpty();
-    // }
+        System.out.println("Validation successful. All tags matched."); 
+        return true;
+    }
 
    
-
 
 
     public Map<String, Object> classifyContent(String rawHtml) {

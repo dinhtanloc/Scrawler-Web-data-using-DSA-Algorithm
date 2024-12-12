@@ -12,9 +12,9 @@ import java.util.Map;
 public class Chunk {
 
     @Id
-    private String id;  // ID duy nhất của chunk
-    private String text;  // Nội dung của chunk
-    private double[] embedding;  // Vector embedding nếu cần
+    private String id;  
+    private String text;  
+    private double[] embedding;  
     private Map<String, Object> metadata;
 
     // Getters và Setters
