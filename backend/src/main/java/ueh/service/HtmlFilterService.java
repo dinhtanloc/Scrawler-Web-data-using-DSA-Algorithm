@@ -29,23 +29,6 @@ public class HtmlFilterService {
     private final Queue<String> htmlQueue= new Queue<>(); 
 
 
-
-    /**
-     * Xử lý các thẻ HTML trong queue.
-     */
-    public String processQueue() {
- 
-        StringBuilder processedContent = new StringBuilder();
-
-        while (!queueService.isEmpty()) {
-            HtmlData dequeuedHtmlData = queueService.dequeue();
-            processedContent.append(dequeuedHtmlData.getRawHtml());
-        }
-
-        return processedContent.toString();
-    }
-
-
     public boolean validate(String rawHtml) {
         List<String> openTags = new ArrayList<>();
         List<String> selfClosingTags = List.of("img", "br", "hr", "input", "link", "meta", "a", "area", "base", "col", "embed", "param", "source", "track", "wbr");
@@ -63,50 +46,34 @@ public class HtmlFilterService {
         while (matcher.find()) {
             String tag = matcher.group(1);
             if (svgTags.contains(tag)) {
-                // System.out.println("SVG tag detected and skipped: " + tag);
-                continue; // Bỏ qua SVG tags
+                continue; 
             }
-            htmlQueue.enqueue(tag.trim()); // Chỉ thêm vào queue nếu không phải là SVG
-            // System.out.println("Enqueued tag: " + tag.trim());
+            htmlQueue.enqueue(tag.trim()); 
         }
     
         while (!htmlQueue.isEmpty()) {
-            String tag = htmlQueue.dequeue();
-            // System.out.println("Dequeued tag: " + tag);
-            // System.out.println("Open tags before processing: " + openTags);
-    
+            String tag = htmlQueue.dequeue();    
             if (selfClosingTags.contains(tag)) {
-                // System.out.println("Self-closing tag detected and processed: " + tag);
                 continue;
             }
     
             if (!tag.startsWith("/")) {
                 openTags.add(tag);
-                // System.out.println("Added to open tags: " + tag);
             } else {
                 if (openTags.isEmpty() || !openTags.get(openTags.size() - 1).equals(tag.substring(1))) {
-                    // System.out.println("Syntax error detected. Tag mismatch or unmatched closing tag: " + tag);
                     return false;
                 }
                 String matchedTag = openTags.remove(openTags.size() - 1);
-                // System.out.println("Matched closing tag: " + tag + " with opening tag: " + matchedTag);
             }
     
-            // System.out.println("Open tags after processing: " + openTags);
         }
     
         if (!openTags.isEmpty()) {
-            // System.out.println("Syntax error detected. Unmatched opening tags remain: " + openTags);
             return false;
         }
     
-        // System.out.println("Validation successful. All tags matched.");
         return true;
     }
-    
-    
-    
-    
     
 
 
@@ -186,20 +153,4 @@ public class HtmlFilterService {
     
 
 
-    public boolean validateClassify(String rawHtml) {
-        Map<String, Object> tagContentMap = new HashMap<>();
-        Document document = Jsoup.parse(rawHtml);
-
-        String[] tags = {"title", "p", "h1", "h2", "h3", "h4", "h5", "h6"};
-
-        for (String tag : tags) {
-            Elements elements = document.select(tag);
-            if(!validate(elements.toString())){
-                return false;
-            };
-
-        }
-
-        return true;
-    }
 }

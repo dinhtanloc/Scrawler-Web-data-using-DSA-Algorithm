@@ -24,7 +24,6 @@ public class VectorStoreConfig {
 
     @Bean
     public MongoDBAtlasVectorStore vectorStore(MongoTemplate mongoTemplate, EmbeddingModel embeddingModel) {
-        // Cấu hình Vector Store
         MongoDBVectorStoreConfig config = MongoDBVectorStoreConfig.builder()
             .withCollectionName("chunks") 
             .withVectorIndexName("vector_index") 

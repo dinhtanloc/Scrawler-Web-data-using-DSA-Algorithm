@@ -16,10 +16,6 @@ public class ChatbotController {
     @Autowired
     private ChatBotService chatBotService;
 
-    // @GetMapping("/chat")
-    // public Map chat(@RequestParam(name = "query") String query) {
-    //     return Map.of("answer", chatBotService.chat(query));
-    // }
 
     @PostMapping("/chat")
     public Map<String, String> postChat(@RequestBody Map<String, String> request) {

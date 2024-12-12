@@ -9,7 +9,7 @@ import org.springframework.ai.document.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ueh.service.DataRetrievalService;
+import ueh.service.ChunkService;
 
 @Service
 public class ChatBotService {
@@ -17,7 +17,7 @@ public class ChatBotService {
     @Qualifier("openAiChatModel")
     private ChatModel chatClient;
     @Autowired
-    private DataRetrievalService dataRetrievalService;
+    private ChunkService chunkService;
 
     private final String PROMPT_BLUEPRINT = """
         Answer the query strictly referring the provided context:
@@ -29,7 +29,7 @@ public class ChatBotService {
     """;
 
     public String chat(String query) {
-        return chatClient.call(createPrompt(query, dataRetrievalService.searchData(query)));
+        return chatClient.call(createPrompt(query, chunkService.findSimilarDocuments(query)));
     }
 
     private String createPrompt(String query, List<Document> context) {

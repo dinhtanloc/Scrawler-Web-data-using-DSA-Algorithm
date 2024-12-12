@@ -17,27 +17,9 @@ public class ChunkService {
     @Autowired
     private VectorRepository vectorRepository;
 
-    // @Autowired
-    // private EmbeddingModel embeddingModel;
 
     @Autowired
     private MongoDBAtlasVectorStore vectorStore;
-
-    
-
-
-    // public Chunk saveChunk(Chunk chunk) {
-    //     // Chunk savedChunk = chunkRepository.save(chunk);
-
-    //     Map<String, Object> metadata = chunk.getMetadata();
-
-    //     Document document = new Document(chunk.getText());
-    //     // System.out.println("Document: " + document.getContent());
-    //     vectorStore.add(List.of(document)); 
-
-    //     return chunk;
-    // }
-
 
     public void embededHTML(String htmlContent) {
         Document document = new Document(htmlContent);
@@ -48,8 +30,6 @@ public class ChunkService {
         for (Document chunk : chunks) {
             Chunk chunkEntity = new Chunk();
             chunkEntity.setText(chunk.getContent());
-            // System.out.println("Chunk: " + chunkEntity.getText());
-            // chunkEntity.setEmbedding(chunkEntity.getText(), embeddingModel);
             vectorRepository.saveChunk(chunkEntity);
         }
     }
