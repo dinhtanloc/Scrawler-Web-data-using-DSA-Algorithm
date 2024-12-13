@@ -152,25 +152,6 @@ public class HtmlFilterService {
     }
     
 
-
-    public boolean validateClassify(String rawHtml) {
-        Map<String, Object> tagContentMap = new HashMap<>();
-        Document document = Jsoup.parse(rawHtml);
-
-        String[] tags = {"title", "p", "h1", "h2", "h3", "h4", "h5", "h6"};
-
-        for (String tag : tags) {
-            Elements elements = document.select(tag);
-            if(!validate(elements.toString())){
-                return false;
-            };
-
-        }
-
-        return true;
-    }
-
-
     public static Map<String, List<String>> extractContentWithoutTags(String html) {
         String regex = "<(/?\\w+)([^>]*?)>";
         Pattern tagPattern = Pattern.compile(regex);
