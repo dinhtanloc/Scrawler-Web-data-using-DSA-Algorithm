@@ -16,7 +16,6 @@ export const fetchData = async (url, options = {}) => {
 
     const contentType = response.headers.get("Content-Type") || "";
 
-    // Chỉ đọc stream một lần, dựa trên Content-Type
     if (contentType.includes("application/json")) {
       return await response.json();
     } else {

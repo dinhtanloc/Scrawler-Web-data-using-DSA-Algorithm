@@ -5,14 +5,24 @@ import { useRouter } from "next/navigation";
 import Tooltip from "@/components/Tooltip";
 import UploadHTML from "@/components/UploadHTML";
 import Spinner from "@/components/Spinner";
+<<<<<<< HEAD
 import RenderContent from "@/components/RenderContent"; 
 import { postReq } from "@/utils/fetchData";
 import { FaSearch } from "react-icons/fa";
 import "@/styles/renderContent.css";
 
 
+=======
+import { postReq } from "@/utils/fetchData";
+import { FaSearch } from "react-icons/fa";
+import "@/styles/renderContent.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import processParsedContent from "@/utils/processParsedContent";
+>>>>>>> main
 export default function Home() {
   const [url, setUrl] = useState("");
+  const [urlCheck, setUrlCheck] = useState(false);
   const [htmlContent, setHtmlContent] = useState("");
   const [parsedContent, setParsedContent] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -20,6 +30,7 @@ export default function Home() {
 
   const router = useRouter();
 
+<<<<<<< HEAD
   // Lấy dữ liệu từ localStorage khi trang tải lần đầu
   useEffect(() => {
     const savedUrl = localStorage.getItem("url");
@@ -41,6 +52,11 @@ export default function Home() {
       localStorage.removeItem("parsedContent");
     }
   }, [url, htmlContent, parsedContent]);
+=======
+  useEffect(() => {
+   
+  }, [htmlContent,parsedContent]);
+>>>>>>> main
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -66,6 +82,7 @@ export default function Home() {
     setLoading(true);
     try {
       if (htmlContent) {
+<<<<<<< HEAD
         const response = await postReq("/api/html/read", { htmlContent });
         setParsedContent(response); // Ghi đè nội dung cũ
       } else {
@@ -74,15 +91,102 @@ export default function Home() {
     } catch (error) {
       console.error("Error parsing HTML:", error);
       alert("Không thể đọc nội dung HTML.");
+=======
+        const response = await postReq("/api/html/read", { htmlContent, urlCheck });
+        console.log(response);
+        setParsedContent(response);
+      } else {
+        toast.error(`Vui lòng nhập nội dung HTML.`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      }
+    } catch (error) {
+      console.error("Error parsing HTML:", error);
+      toast.error(`Không thể lấy nội dung HTML. ${error}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      setUrlCheck(false);
+      setLoading(false);
+    }
+  };
+
+ 
+
+  const handleChatBot = () => {
+    router.push("/chatbot");
+  };
+
+  const handleUpload = (html) => {
+    setHtmlContent(html);
+  };
+
+  const handleCrawlHtml = async () => {
+    console.log('check crawl');
+    if (!url) {
+      toast.warning("Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await postReq("/api/html/crawl", { url });
+      setHtmlContent(response.html);
+      setUrlCheck(true);
+    } catch (error) {
+      console.error("Error fetching HTML:", error);
+      setUrlCheck(false);
+      toast.error(`Không thể lấy nội dung HTML. ${error}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    
+>>>>>>> main
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSave = () => {
-    alert("Nội dung đã được lưu vào cơ sở dữ liệu!");
-  };
+  const handleSave = async(e) => {
+    console.log('check save');
+    e.preventDefault();
+    if (!htmlContent) {
+      toast.warning("Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
+<<<<<<< HEAD
   const handleChatBot = () => {
     router.push("/chatbot");
   };
@@ -104,6 +208,40 @@ export default function Home() {
     } catch (error) {
       console.error("Error fetching HTML:", error);
       alert("Không thể lấy nội dung HTML.");
+=======
+      return;
+    }
+    // console.log(parsedContent);
+    const processedContent = processParsedContent(parsedContent);
+
+    // console.log("Processed Content:", processedContent);
+    setLoading(true);
+    try {
+      const response = await postReq("/chunks/save", { processedContent });
+      toast.success("Nội dung đã được lưu thành công!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      
+    } catch (error) {
+      console.error("Error fetching HTML:", error);
+      
+      toast.warning("Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      
+>>>>>>> main
     } finally {
       setLoading(false);
     }
@@ -114,6 +252,41 @@ export default function Home() {
       handleCrawlHtml();
     }
   };
+<<<<<<< HEAD
+=======
+
+  const renderContent = (content) => {
+    if (!content) return null;
+  
+    return (
+      <div className="space-y-4">
+        {content.title && (
+          <div className="text-lg font-bold text-center text-blue-600 border-b-2 pb-2">
+            {content.title}
+          </div>
+        )}
+        {content.h1 && (
+          <h1 className="text-2xl font-bold border-b-2 pb-2">{content.h1}</h1>
+        )}
+        {content.h2 && (
+          <h2 className="text-xl font-semibold border-l-4 pl-2 border-blue-500">
+            {content.h2}
+          </h2>
+        )}
+        {content.h3 && (
+          <h3 className="text-lg font-medium pl-4 text-gray-700">{content.h3}</h3>
+        )}
+        {content.p && (
+          <p className="text-base leading-relaxed text-justify pl-6">{content.p}</p>
+        )}
+        {content.span && (
+          <span className="text-sm italic pl-8 text-gray-600">{content.span}</span>
+        )}
+      </div>
+    );
+  };
+  
+>>>>>>> main
   
 
   return (
@@ -122,6 +295,7 @@ export default function Home() {
         isDarkMode ? "bg-black text-white" : "bg-white text-black"
       } p-6`}
     >
+      <ToastContainer />
       {/* Dark Mode Toggle */}
       <button
         onClick={toggleDarkMode}
@@ -243,6 +417,7 @@ export default function Home() {
             </Tooltip>
             <Tooltip text="Lưu nội dung vào cơ sở dữ liệu">
               <button
+                type="button"
                 onClick={handleSave}
                 className={`px-6 py-3 rounded-md ${
                   isDarkMode
@@ -274,7 +449,11 @@ export default function Home() {
             Nội dung đã đọc
           </h2>
           <div className="overflow-auto h-[500px] border border-gray-700 p-4 rounded-md">
+<<<<<<< HEAD
             <RenderContent content={parsedContent} />
+=======
+            {renderContent(parsedContent)}
+>>>>>>> main
           </div>
         </div>
       </div>

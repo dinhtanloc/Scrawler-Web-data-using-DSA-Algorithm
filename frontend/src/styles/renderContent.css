@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+/* renderContent.css */
+
+>>>>>>> main
 /* Title Styles */
 .render-title {
   font-size: 1.5rem;
@@ -8,23 +13,41 @@
   padding-bottom: 0.5rem;
 }
 
+<<<<<<< HEAD
 /* Heading Styles */
+=======
+/* Heading 1 Styles */
+>>>>>>> main
 .render-h1 {
   font-size: 2rem;
   font-weight: bold;
   border-bottom: 2px solid #ccc;
   padding-bottom: 0.5rem;
 }
+<<<<<<< HEAD
 .render-h2 {
   font-size: 1.5rem;
   font-weight: 600;
   border-left: 4px solid #2563eb;
   padding-left: 0.5rem;
 }
+=======
+
+/* Heading 2 Styles */
+.render-h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  border-left: 4px solid #2563eb; /* Blue */
+  padding-left: 0.5rem;
+}
+
+/* Heading 3 Styles */
+>>>>>>> main
 .render-h3 {
   font-size: 1.25rem;
   font-weight: 500;
   padding-left: 1rem;
+<<<<<<< HEAD
   color: #4b5563;
 }
 .render-h4 {
@@ -44,6 +67,9 @@
   font-weight: 500;
   padding-left: 1.75rem;
   color: #9ca3af;
+=======
+  color: #4b5563; /* Gray */
+>>>>>>> main
 }
 
 /* Paragraph Styles */
@@ -59,6 +85,7 @@
   font-size: 0.875rem;
   font-style: italic;
   padding-left: 2rem;
+<<<<<<< HEAD
   color: #9ca3af;
 }
 
@@ -89,4 +116,7 @@
 
 .context-line {
   color: #333;
+=======
+  color: #9ca3af; /* Light Gray */
+>>>>>>> main
 }
