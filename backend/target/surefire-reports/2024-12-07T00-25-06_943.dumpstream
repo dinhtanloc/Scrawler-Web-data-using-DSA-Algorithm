@@ -1,0 +1,5 @@
+# Created at 2024-12-07T00:25:07.055
+Boot Manifest-JAR contains absolute paths in classpath 'D:\Scrawler-Web-data-using-DSA-Algorithm\backend\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

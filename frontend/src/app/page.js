@@ -140,7 +140,7 @@ export default function Home() {
           isDarkMode ? "text-red-500" : "text-red-700"
         }`}
       >
-        HTML Document Reader
+        HTML Parser
       </h1>
 
       {/* Thanh nhập URL và nút tải tệp HTML */}

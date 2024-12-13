@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ueh.model.HtmlData;
+import ueh.util.Queue;
+
 
 @Service
 public class HtmlFilterService {
@@ -20,95 +24,17 @@ public class HtmlFilterService {
     @Autowired
     private QueueService queueService;
 
-    private final HtmlSyntaxValidator htmlSyntaxValidator = new HtmlSyntaxValidator();
-
-    /**
-     * Phân loại các thẻ HTML, đẩy vào queue và kiểm tra cú pháp.
-     *
-     * @param rawHtml Nội dung HTML thô
-     * @throws IllegalArgumentException nếu cú pháp HTML không hợp lệ
-     */
-    public void validateAndClassifyContent(String rawHtml) {
-        System.out.println("Raw HTML received for processing: " + rawHtml); // Log nội dung HTML
-
-        // Phân loại nội dung HTML theo thẻ
-        Map<String, Object> tagContentMap = classifyContent(rawHtml);
-
-        // Kiểm tra cú pháp từng thẻ trong danh sách đã phân loại
-        boolean isValid = validateAllTags(tagContentMap);
-
-        if (isValid) {
-            System.out.println("All tags are valid. Enqueuing content.");
-            classifyAndEnqueueContent(rawHtml);
-        } else {
-            System.err.println("HTML syntax error detected. Processing stopped.");
-            throw new IllegalArgumentException("HTML syntax error detected. See logs for details.");
-        }
-    }
-
-    /**
-     * Kiểm tra cú pháp của tất cả các thẻ HTML trong danh sách đã phân loại.
-     *
-     * @param tagContentMap Bản đồ chứa các thẻ và nội dung
-     * @return true nếu tất cả các thẻ hợp lệ, false nếu có lỗi
-     */
-    private boolean validateAllTags(Map<String, Object> tagContentMap) {
-        boolean isValid = true;
-
-        for (Map.Entry<String, Object> entry : tagContentMap.entrySet()) {
-            String tag = entry.getKey();
-            Object content = entry.getValue();
-
-            // Duyệt từng nội dung của thẻ
-            if (content instanceof List) {
-                @SuppressWarnings("unchecked")
-                List<String> contentList = (List<String>) content;
-                for (String item : contentList) {
-                    if (!validateTagSyntax(tag, item)) {
-                        isValid = false;
-                    }
-                }
-            } else {
-                if (!validateTagSyntax(tag, content.toString())) {
-                    isValid = false;
-                }
-            }
-        }
-
-        return isValid;
-    }
-
-    /**
-     * Kiểm tra cú pháp của một thẻ HTML.
-     *
-     * @param tag Tên thẻ
-     * @param content Nội dung thẻ
-     * @return true nếu cú pháp hợp lệ, false nếu không
-     */
-    private boolean validateTagSyntax(String tag, String content) {
-        String wrappedTag = "<" + tag + ">" + content + "</" + tag + ">";
-        boolean isValid = htmlSyntaxValidator.validate(wrappedTag);
-
-        System.out.println("Validating tag: " + wrappedTag + " -> " + isValid); // Log kết quả kiểm tra
-
-        if (!isValid) {
-            System.err.println("Syntax error detected in tag: " + wrappedTag);
-        }
-
-        return isValid;
-    }
+    private final Queue<String> htmlQueue= new Queue<>(); 
 
     /**
      * Phân loại các thẻ HTML chứa nội dung và đẩy vào queue.
      */
     public void classifyAndEnqueueContent(String rawHtml) {
-        System.out.println("Classifying and enqueuing content."); // Log quá trình phân loại
         Document document = Jsoup.parse(rawHtml);
         Elements contentElements = document.select("title, p, h1, h2, h3, h4, h5, h6, div, span");
 
         for (Element element : contentElements) {
             HtmlData htmlData = new HtmlData(element.outerHtml());
-            System.out.println("Enqueuing HTML element: " + htmlData.getRawHtml()); // Log nội dung từng phần tử
             queueService.enqueue(htmlData);
         }
     }
@@ -127,20 +53,72 @@ public class HtmlFilterService {
         return processedContent.toString();
     }
 
-    /**
-     * Phân loại nội dung HTML theo thẻ (dùng cho phương thức khác nếu cần).
-     */
+
+    public boolean validate(String rawHtml) {
+        List<String> openTags = new ArrayList<>(); 
+
+        List<String> selfClosingTags = List.of("img", "br", "hr", "input", "link", "meta", "area", "base", "col", "embed", "param", "source", "track", "wbr");
+
+        Pattern pattern = Pattern.compile("<(/?\\w+)[^>]*>");
+        Matcher matcher = pattern.matcher(rawHtml);
+
+        while (matcher.find()) {
+            String tag = matcher.group(1); 
+            htmlQueue.enqueue(tag.trim());
+            System.out.println("Enqueued tag: " + tag.trim()); 
+        }
+
+        while (!htmlQueue.isEmpty()) {
+            String tag = htmlQueue.dequeue();
+            System.out.println("Dequeued tag: " + tag); 
+            System.out.println("Open tags before processing: " + openTags); 
+
+            if (selfClosingTags.contains(tag)) {
+                System.out.println("Self-closing tag detected and processed: " + tag); 
+                continue;
+            }
+
+            if (!tag.startsWith("/")) {
+                openTags.add(tag);
+                System.out.println("Added to open tags: " + tag); 
+            } else {
+                if (openTags.isEmpty() || !openTags.get(openTags.size() - 1).equals(tag.substring(1))) {
+                    System.out.println("Syntax error detected. Tag mismatch or unmatched closing tag: " + tag); 
+                    return false; 
+                }
+                String matchedTag = openTags.remove(openTags.size() - 1); 
+                System.out.println("Matched closing tag: " + tag + " with opening tag: " + matchedTag);
+            }
+
+            System.out.println("Open tags after processing: " + openTags); 
+        }
+
+        if (!openTags.isEmpty()) {
+            System.out.println("Syntax error detected. Unmatched opening tags remain: " + openTags); 
+            return false;
+        }
+
+        System.out.println("Validation successful. All tags matched."); 
+        return true;
+    }
+
+   
+
+
     public Map<String, Object> classifyContent(String rawHtml) {
         Map<String, Object> tagContentMap = new HashMap<>();
         Document document = Jsoup.parse(rawHtml);
 
-        String[] tags = {"title", "p", "h1", "h2", "h3", "h4", "h5", "h6", "div", "span"};
+        String[] tags = {"title", "p", "h1", "h2", "h3", "h4", "h5", "h6"};
 
         for (String tag : tags) {
             Elements elements = document.select(tag);
+            // System.out.println(elements);
+            validate(elements.toString());
 
             for (Element element : elements) {
                 String content = element.text().trim();
+                // System.out.println("Tag: " + tag + ", Content: " + content);
 
                 if (!content.isEmpty()) {
                     if (tagContentMap.containsKey(tag)) {

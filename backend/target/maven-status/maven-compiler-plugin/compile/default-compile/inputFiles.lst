@@ -1,8 +1,9 @@
-C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\controller\HtmlQueueController.java
-C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\HtmlCrawlerService.java
-C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\HtmlFilterService.java
-C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\model\HtmlData.java
-C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\App.java
-C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\QueueService.java
-C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\util\Queue.java
-C:\Users\PC\Data\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\QueueConfig.java
+D:\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\HtmlSyntaxValidator.java
+D:\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\HtmlCrawlerService.java
+D:\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\controller\HtmlQueueController.java
+D:\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\HtmlFilterService.java
+D:\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\App.java
+D:\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\model\HtmlData.java
+D:\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\service\QueueService.java
+D:\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\config\QueueConfig.java
+D:\Scrawler-Web-data-using-DSA-Algorithm\backend\src\main\java\ueh\util\Queue.java
