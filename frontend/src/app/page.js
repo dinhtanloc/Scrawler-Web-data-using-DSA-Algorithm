@@ -18,7 +18,6 @@ export default function Home() {
   const [parsedContent, setParsedContent] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
 
   const router = useRouter();
 
@@ -52,13 +51,29 @@ export default function Home() {
       if (htmlContent) {
         const response = await postReq("/api/html/read", { htmlContent, urlCheck });
         console.log(response);
-        setParsedContent(response); 
+        setParsedContent(response);
       } else {
-        alert("Vui lòng nhập nội dung HTML.");
+        toast.error(`Vui lòng nhập nội dung HTML.`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       }
     } catch (error) {
       console.error("Error parsing HTML:", error);
-      alert("Error parsing HTML:", error);
+      toast.error(`Không thể lấy nội dung HTML. ${error}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } finally {
       setUrlCheck(false);
       setLoading(false);
@@ -78,7 +93,7 @@ export default function Home() {
   const handleCrawlHtml = async () => {
     console.log('check crawl');
     if (!url) {
-      toast.warning("⚠️ Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
+      toast.warning("Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -98,7 +113,16 @@ export default function Home() {
     } catch (error) {
       console.error("Error fetching HTML:", error);
       setUrlCheck(false);
-      alert("Không thể lấy nội dung HTML.");
+      toast.error(`Không thể lấy nội dung HTML. ${error}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    
     } finally {
       setLoading(false);
     }
@@ -108,7 +132,15 @@ export default function Home() {
     console.log('check save');
     e.preventDefault();
     if (!htmlContent) {
-      alert("Nội dung HTML rỗng.");
+      toast.warning("Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
       return;
     }
@@ -116,12 +148,29 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await postReq("/chunks/save", { processedContent });
-      alert("Lưu thành công.");
+      toast.success("Nội dung đã được lưu thành công!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       
     } catch (error) {
       console.error("Error fetching HTML:", error);
       
-      alert("Không thể lấy nội dung HTML.");
+      toast.warning("Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      
     } finally {
       setLoading(false);
     }
