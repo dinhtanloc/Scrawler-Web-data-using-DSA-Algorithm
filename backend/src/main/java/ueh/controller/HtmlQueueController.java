@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 import ueh.model.HtmlData;
 import ueh.service.HtmlCrawlerService;
 import ueh.service.HtmlFilterService;
@@ -61,16 +62,22 @@ public class HtmlQueueController {
         }
 
         if (!isUrlsearch) {
-            
-            boolean isValidHtml = filterService.validate(htmlContent);
-            if (!isValidHtml) {
+            try {
+                Map<String, Object> contentMap = new HashMap<>(filterService.extractContentWithoutTags(htmlContent));
+                return ResponseEntity.ok(contentMap);
+                
+            } catch (Exception e) {
                 Map<String, Object> errorResponse = Map.of(
-                    "error", "Invalid HTML content",
-                    "status", 400
+                    "error", "Failed to read HTML content",
+                    "details", e.getMessage(),
+                    "status", 500
                 );
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
             }
         }
+
+
 
         Map<String, Object> contentMap = filterService.classifyContent(htmlContent);
         return ResponseEntity.ok(contentMap);

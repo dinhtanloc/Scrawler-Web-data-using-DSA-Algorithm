@@ -144,10 +144,7 @@ export default function Home() {
 
       return;
     }
-    // console.log(parsedContent);
     const processedContent = processParsedContent(parsedContent);
-
-    // console.log("Processed Content:", processedContent);
     setLoading(true);
     try {
       const response = await postReq("/chunks/save", { processedContent });
