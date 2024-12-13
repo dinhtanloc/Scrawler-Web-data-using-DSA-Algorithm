@@ -52,7 +52,7 @@ export default function Home() {
       if (htmlContent) {
         const response = await postReq("/api/html/read", { htmlContent, urlCheck });
         console.log(response);
-        setParsedContent(response); // Ghi đè nội dung cũ
+        setParsedContent(response); 
       } else {
         alert("Vui lòng nhập nội dung HTML.");
       }
@@ -77,15 +77,6 @@ export default function Home() {
 
   const handleCrawlHtml = async () => {
     console.log('check crawl');
-    toast.warning("⚠️ Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
     if (!url) {
       toast.warning("⚠️ Nội dung HTML rỗng. Vui lòng kiểm tra lại!", {
         position: "top-right",
@@ -121,10 +112,7 @@ export default function Home() {
 
       return;
     }
-    // console.log(parsedContent);
     const processedContent = processParsedContent(parsedContent);
-
-    // console.log("Processed Content:", processedContent);
     setLoading(true);
     try {
       const response = await postReq("/chunks/save", { processedContent });
