@@ -3,7 +3,6 @@ ueh\controller\ChatbotController.class
 ueh\service\HtmlFilterService.class
 ueh\model\Chunk.class
 ueh\service\QueueService.class
-ueh\config\QueueConfig.class
 ueh\controller\TextController.class
 ueh\controller\HtmlQueueController.class
 ueh\model\HtmlData.class

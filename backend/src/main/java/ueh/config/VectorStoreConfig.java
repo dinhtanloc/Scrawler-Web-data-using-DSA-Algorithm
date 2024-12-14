@@ -14,7 +14,6 @@ import java.util.List;
 
 @Configuration
 public class VectorStoreConfig {
-
     @Value("${spring.ai.openai.api-key}")
     private String openAiKey;
     @Bean

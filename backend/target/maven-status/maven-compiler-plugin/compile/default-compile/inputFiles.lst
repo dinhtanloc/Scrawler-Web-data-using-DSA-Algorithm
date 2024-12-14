@@ -8,7 +8,6 @@ C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\App.java
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\config\VectorStoreConfig.java
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\controller\ChatbotController.java
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\model\HtmlData.java
-C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\config\QueueConfig.java
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\service\ChunkService.java
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\service\QueueService.java
 C:\Users\Admin\Data\DSA-Finalproject\backend\src\main\java\ueh\model\Chunk.java
