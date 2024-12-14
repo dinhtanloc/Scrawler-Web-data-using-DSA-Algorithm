@@ -53,6 +53,8 @@ cd backend
 mvn clean install
 mvn spring-boot:run
 ```
+Backend sẽ được chạy ở cổng `8080`.
+
 
 #### Database
 ```bash
