@@ -34,7 +34,7 @@ Dự án mong muốn tạo ra một ứng dụng web với các chức năng:
 ### 2.2. Sao chép và thiết lập dự án
 Clone dự án từ GitHub:
 ```bash
-git clone <project-repo-link> # Thay <project-repo-link> bằng liên kết dự án của bạn
+git clone [<project-repo-link> # Thay <project-repo-link> bằng liên kết dự án của bạn](https://github.com/dinhtanloc/Scrawler-Web-data-using-DSA-Algorithm.git)
 ```
 
 Tại thư mục chính của dự án, sử dụng terminal để thiết lập các thư mục con:
