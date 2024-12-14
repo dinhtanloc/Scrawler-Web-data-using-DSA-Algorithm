@@ -17,7 +17,6 @@ public class Chunk {
     private double[] embedding;  
     private Map<String, Object> metadata;
 
-    // Getters và Setters
     public String getId() {
         return id;
     }
