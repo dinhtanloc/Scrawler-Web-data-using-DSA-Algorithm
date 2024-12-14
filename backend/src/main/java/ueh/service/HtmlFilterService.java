@@ -29,53 +29,6 @@ public class HtmlFilterService {
     private final Queue<String> htmlQueue= new Queue<>(); 
 
 
-    public boolean validate(String rawHtml) {
-        List<String> openTags = new ArrayList<>();
-        List<String> selfClosingTags = List.of("img", "br", "hr", "input", "link", "meta", "a", "area", "base", "col", "embed", "param", "source", "track", "wbr");
-        List<String> svgTags = List.of("svg", "circle", "rect", "path", "g", 
-            "line", "polyline", "polygon", "ellipse", 
-            "defs", "mask", "pattern", "text", "use",
-            "image", "foreignObject", "clippath", "tspan",
-            "a", "marker", "filter", "symbol"
-        );
-
-    
-        Pattern pattern = Pattern.compile("<(/?\\w+)[^>]*>");
-        Matcher matcher = pattern.matcher(rawHtml);
-    
-        while (matcher.find()) {
-            String tag = matcher.group(1);
-            if (svgTags.contains(tag)) {
-                continue; 
-            }
-            htmlQueue.enqueue(tag.trim()); 
-        }
-    
-        while (!htmlQueue.isEmpty()) {
-            String tag = htmlQueue.dequeue();    
-            if (selfClosingTags.contains(tag)) {
-                continue;
-            }
-    
-            if (!tag.startsWith("/")) {
-                openTags.add(tag);
-            } else {
-                if (openTags.isEmpty() || !openTags.get(openTags.size() - 1).equals(tag.substring(1))) {
-                    return false;
-                }
-                String matchedTag = openTags.remove(openTags.size() - 1);
-            }
-    
-        }
-    
-        if (!openTags.isEmpty()) {
-            return false;
-        }
-    
-        return true;
-    }
-    
-
 
     public Map<String, Object> classifyContent(String rawHtml) {
         Map<String, Object> tagContentMap = new HashMap<>();
