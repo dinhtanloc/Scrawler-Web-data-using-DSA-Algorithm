@@ -178,7 +178,7 @@ public class HtmlFilterService {
                 continue;
             }
 
-            if (tag.equals("meta") || tag.equals("link") || tag.equals("a")) {
+            if (tag.equals("meta") || tag.equals("link")) {
                 lastIndex = matcher.end();
                 continue;
             }
